@@ -17,9 +17,6 @@ public class ProjectService {
     public List<HomePageResponseDefaultDto> getHomePage() {
 
 
-
         findAllByBigCategory()
-
-
     }
 }
