@@ -8,6 +8,16 @@ import lombok.Getter;
 public class HomePageResponseDefaultDto {
 
 
+    String title;
+
+    int budget;
+
+    String discription;
+
+    int workingPeriod;
+
+
+
 
 
 }
