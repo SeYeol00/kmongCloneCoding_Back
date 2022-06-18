@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Files {
+public class File {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +24,12 @@ public class Files {
     @ManyToOne
     @JoinColumn(name = "projectId")
     private Project project;
+
+    public File(String fileUrl,String fileName,Project project){
+    this.fileUrl = fileUrl;
+    this.fileName = fileName;
+    this.project = project;
+    }
+
+
 }
