@@ -14,12 +14,12 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
 
 
-    public List<HomePageResponseDefaultDto> getHomePage() {
+    /*public List<HomePageResponseDefaultDto> getHomePage() {
 
 
 
-        findAllByBigCategory()
+        findAllByBigCategory();
 
 
-    }
+    }*/
 }
