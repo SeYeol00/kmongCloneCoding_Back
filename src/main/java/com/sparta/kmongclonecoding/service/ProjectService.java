@@ -28,8 +28,6 @@ public class ProjectService {
 
     }*/
 
-        findAllByBigCategory()
-    }
 
     public void createProject(ProjectRequestDto projectRequestDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
