@@ -216,44 +216,75 @@ public class ProjectService {
         }
     }
 
-    public Map<String, Object> editProject(Long projectId, ProjectRequestDto projectRequestDto, Long userId) {
-        Project project = projectRepository.findByIdAndUserId(projectId, userId);
-        if (project == null) {
+    public Map<String,Boolean> editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) throws ParseException {
+        Project project =projectRepository.findByIdAndUserId(projectId,userId);
+        if(project == null){
             throw new NullPointerException("존재하지 않는 프로젝트입니다.");
         }
-        project.update(projectRequestDto);
 
-        Map<String, Object> responseDtoMap = new HashMap<String, Object>();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
+        Date volunteerValidDate = formatter.parse(projectRequestDto.getVolunteerValidDate());
+        Date dueDateForApplication = formatter.parse(projectRequestDto.getDueDateForApplication());
 
-        String[] currentStatusArr = projectRequestDto.getCurrentStatus().split(",");
-        String[] requiredFunctionArr = projectRequestDto.getRequiredFunction().split(",");
-        String[] userRelatedFunctionArr = projectRequestDto.getUserRelatedFunction().split(",");
-        String[] commerceRelatedFunctionArr = projectRequestDto.getCommerceRelatedFunction().split(",");
-        String[] siteEnvironment = projectRequestDto.getSiteEnvironment().split(",");
-        String[] solutionInUseArr = projectRequestDto.getSolutionInUse().split(",");
-        extracted(responseDtoMap, currentStatusArr);
-        extracted(responseDtoMap, requiredFunctionArr);
-        extracted(responseDtoMap, userRelatedFunctionArr);
-        extracted(responseDtoMap, commerceRelatedFunctionArr);
-        extracted(responseDtoMap, siteEnvironment);
-        extracted(responseDtoMap, solutionInUseArr);
+        project.update(projectRequestDto,volunteerValidDate,dueDateForApplication);
+
+        Map<String, Boolean> responseDtoMap = new HashMap<String, Boolean>();
+
+        if (projectRequestDto.getCurrentStatus().contains(",")) {
+            String[] currentStatusArr = projectRequestDto.getCurrentStatus().split(",");
+            extracted(responseDtoMap, currentStatusArr);
+        } else {
+            responseDtoMap.put(projectRequestDto.getCurrentStatus(), true);
+        }
+        if (projectRequestDto.getRequiredFunction().contains(",")) {
+            String[] requiredFunctionArr = projectRequestDto.getRequiredFunction().split(",");
+            extracted(responseDtoMap, requiredFunctionArr);
+        } else {
+            responseDtoMap.put(projectRequestDto.getRequiredFunction(), true);
+        }
+
+        if (projectRequestDto.getUserRelatedFunction().contains(",")) {
+            String[] userRelatedFunctionArr = projectRequestDto.getUserRelatedFunction().split(",");
+            extracted(responseDtoMap, userRelatedFunctionArr);
+        } else {
+            responseDtoMap.put(projectRequestDto.getUserRelatedFunction(), true);
+        }
+        if (projectRequestDto.getCommerceRelatedFunction().contains(",")) {
+            String[] commerceRelatedFunctionArr = projectRequestDto.getCommerceRelatedFunction().split(",");
+            extracted(responseDtoMap, commerceRelatedFunctionArr);
+        } else {
+            responseDtoMap.put(projectRequestDto.getCommerceRelatedFunction(), true);
+        }
+        if (projectRequestDto.getSiteEnvironment().contains(",")) {
+            String[] siteEnvironment = projectRequestDto.getSiteEnvironment().split(",");
+            extracted(responseDtoMap, siteEnvironment);
+        } else {
+            responseDtoMap.put(projectRequestDto.getSiteEnvironment(), true);
+        }
+        if (projectRequestDto.getSolutionInUse().contains(",")) {
+            String[] solutionInUseArr = projectRequestDto.getSolutionInUse().split(",");
+            extracted(responseDtoMap, solutionInUseArr);
+        } else {
+            responseDtoMap.put(projectRequestDto.getSolutionInUse(), true);
+        }
 
         return responseDtoMap;
-
-        //"currentStatus":”[string] 프로젝트 준비상황”,
-        //"requiredFunction"[string] 기본기능”):,
-        //"userRequiredFunction"(”[string] 회원 관련 기능”):,
-        //"commerceRequiredFunction"([string] 커머스 관련 기능”):,
-        //"siteEnvironment"(”[string] 사이트 환경”):,
-        //”solutionInUse”(String) 솔루션”: ,
-
-
     }
 
-    private void extracted(Map<String, Object> responseDtoMap, String[] strArr) {
+    private void extracted(Map<String, Boolean> responseDtoMap, String[] strArr) {
         for (int i = 0; i <= strArr.length; i++) {
             responseDtoMap.put(strArr[i], true);
         }
     }
 
+
+    public void deleteProject(Long projectId, Long userId) {
+        Project project =projectRepository.findByIdAndUserId(projectId,userId);
+        if(project == null ){
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+//        awsS3Service.deleteFile(fileName);
+
+        projectRepository.deleteById(projectId);
+    }
 }

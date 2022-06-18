@@ -107,9 +107,10 @@ public class Project extends Timestamped{
         this.dueDateForApplication=dueDateForApplication;
         this.workingPeriod=projectRequestDto.getWorkingPeriod();
         this.imageUrl = imageUrl;
+        this.description=projectRequestDto.getDescription();
     }
 
-    public void update(ProjectRequestDto projectRequestDto){
+    public void update(ProjectRequestDto projectRequestDto,Date volunteerValidDate,Date dueDateForApplication){
         this.bigCategory=projectRequestDto.getBigCategory();
         this.smallCategory=projectRequestDto.getSmallCategory();
         this.progressMethod=projectRequestDto.getProgressMethod();
@@ -127,6 +128,7 @@ public class Project extends Timestamped{
         this.workingPeriod=projectRequestDto.getWorkingPeriod();
         this.volunteerValidDate = volunteerValidDate;
         this.dueDateForApplication =dueDateForApplication;
+        this.description=projectRequestDto.getDescription();
     }
 
 }
