@@ -24,7 +24,6 @@ public class ProjectController {
     public List<HomePageResponseDefaultDto> getHomePage(){
         return projectService.getHomePage();
     }*/
-    }
 
     @PostMapping("/projects/project")
     public void createProject(ProjectRequestDto projectRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){

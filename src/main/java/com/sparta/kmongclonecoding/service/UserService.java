@@ -4,8 +4,6 @@ import com.sparta.kmongclonecoding.domain.User;
 import com.sparta.kmongclonecoding.dto.LoginRequestDto;
 import com.sparta.kmongclonecoding.dto.LoginResponseDto;
 import com.sparta.kmongclonecoding.dto.SignupRequestDto;
-import com.sparta.kmongclonecoding.dto.User;
-import com.sparta.kmongclonecoding.dto.UserRepository;
 import com.sparta.kmongclonecoding.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
