@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -58,10 +59,10 @@ public class ProjectController {
 
 
     @PutMapping("/projects/project/{projectId}")
-    public void editProject(@PathVariable Long projectId,
-                            ProjectRequestDto projectRequestDto,
-                            @AuthenticationPrincipal UserDetailsImpl userDetails){
-        projectService.editProject(projectId,projectRequestDto,userDetails.getUser().getId());
+    public Map<String,Object> editProject(@PathVariable Long projectId,
+                                          ProjectRequestDto projectRequestDto,
+                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
+       return projectService.editProject(projectId,projectRequestDto,userDetails.getUser().getId());
 
     }
 }

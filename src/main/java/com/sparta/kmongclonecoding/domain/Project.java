@@ -126,5 +126,6 @@ public class Project extends Timestamped{
         this.volunteerValidDate = volunteerValidDate;
         this.dueDateForApplication =dueDateForApplication;
     }
+
 }
 
