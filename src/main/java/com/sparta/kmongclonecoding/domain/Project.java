@@ -122,7 +122,5 @@ public class Project extends Timestamped{
         this.workingPeriod=projectRequestDto.getWorkingPeriod();
     }
 
-    public void update(ProjectRequestDto projectRequestDto) {
-    }
 }
 

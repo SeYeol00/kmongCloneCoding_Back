@@ -13,7 +13,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -53,11 +55,11 @@ public class ProjectService {
         return homePageResponseDefaultDtos;
     }
 
-    public List<ProjectListResponseDto> getProjectListPage() {
-        List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
-        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"createdAt"));
-
-    }
+//    public List<ProjectListResponseDto> getProjectListPage() {
+//        List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
+//        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"createdAt"));
+//
+//    }
 
 
 
@@ -69,11 +71,46 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public void editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) {
-        Project project =projectRepository.findbyIdAndUserId(projectId,userId);
+    public Map<String,Object> editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) {
+        Project project =projectRepository.findByIdAndUserId(projectId,userId);
+        if(project == null){
+            throw new NullPointerException("존재하지 않는 프로젝트입니다.");
+        }
+        project.update(projectRequestDto);
+
+        Map<String,Object> responseDtoMap = new HashMap<String ,Object>();
+
+        String []currentStatusArr=projectRequestDto.getCurrentStatus().split(",");
+        String []requiredFunctionArr=projectRequestDto.getRequiredFunction().split(",");
+        String []userRelatedFunctionArr=projectRequestDto.getUserRelatedFunction().split(",");
+        String []commerceRelatedFunctionArr=projectRequestDto.getCommerceRelatedFunction().split(",");
+        String []siteEnvironment=projectRequestDto.getSiteEnvironment().split(",");
+        String []solutionInUseArr=projectRequestDto.getSolutionInUse().split(",");
+        extracted(responseDtoMap, currentStatusArr);
+        extracted(responseDtoMap,requiredFunctionArr);
+        extracted(responseDtoMap,userRelatedFunctionArr);
+        extracted(responseDtoMap,commerceRelatedFunctionArr);
+        extracted(responseDtoMap,siteEnvironment);
+        extracted(responseDtoMap,solutionInUseArr);
+
+        return responseDtoMap;
+
+        //"currentStatus":”[string] 프로젝트 준비상황”,
+        //"requiredFunction"[string] 기본기능”):,
+        //"userRequiredFunction"(”[string] 회원 관련 기능”):,
+        //"commerceRequiredFunction"([string] 커머스 관련 기능”):,
+        //"siteEnvironment"(”[string] 사이트 환경”):,
+        //”solutionInUse”(String) 솔루션”: ,
+
+
 
     }
 
+    private void extracted(Map<String, Object> responseDtoMap, String[] strArr) {
+        for(int i = 0; i<= strArr.length; i++){
+            responseDtoMap.put(strArr[i],true);
+        }
+    }
 
 
 }
