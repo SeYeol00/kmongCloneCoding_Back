@@ -1,6 +1,6 @@
 package com.sparta.kmongclonecoding.Vaildator;
 
-import com.sparta.kmongclonecoding.dto.UserRepository;
+import com.sparta.kmongclonecoding.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +8,5 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class UserValidator {
     private final UserRepository userRepository;
-
-
-
+    // FIXME: 2022/06/18 
 }
