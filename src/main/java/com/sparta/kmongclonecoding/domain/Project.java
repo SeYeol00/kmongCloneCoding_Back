@@ -1,5 +1,8 @@
 package com.sparta.kmongclonecoding.domain;
 
+import com.sparta.kmongclonecoding.dto.ProjectRequestDto;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +11,7 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Project extends Timestamped{
 
@@ -78,4 +82,24 @@ public class Project extends Timestamped{
 
     @Column(nullable = false)
     private String workingPeriod;
+
+    public Project(ProjectRequestDto projectRequestDto, User user){
+        this.user=user;
+        this.progressMethod=projectRequestDto.getProgressMethod();
+        this.projectScope=projectRequestDto.getProjectScope();
+        this.title=projectRequestDto.getTitle();
+        this.currentStatus=projectRequestDto.getCurrentStatus();
+        this.requiredFunction=projectRequestDto.getRequiredFunction();
+        this.userRelatedFunction=projectRequestDto.getUserRelatedFunction();
+        this.commerceRelatedFunction=projectRequestDto.getCommerceRelatedFunction();
+        this.siteEnvironment=projectRequestDto.getSiteEnvironment();
+        this.solutionInUse=projectRequestDto.getSolutionInUse();
+        this.reactable=projectRequestDto.getReactable();
+        this.budget=projectRequestDto.getBudget();
+        this.taxInvoice=projectRequestDto.getTaxInvoice();
+        this.volunteerValidDate=projectRequestDto.getVolunteerValidDate();
+        this.dueDateForApplication=projectRequestDto.getDueDateForApplication();
+        this.workingPeriod=projectRequestDto.getWorkingPeriod();
+    }
 }
+
