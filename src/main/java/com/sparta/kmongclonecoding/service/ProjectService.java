@@ -36,4 +36,11 @@ public class ProjectService {
         Project project= new Project(projectRequestDto,user);
         projectRepository.save(project);
     }
+
+    public void editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) {
+        Project project =projectRepository.findbyIdAndUserId(projectId,userId);
+//        project=new Project(projectRequestDto,user);
+//        projectRepository.save(projectRequestDto);
+
+    }
 }
