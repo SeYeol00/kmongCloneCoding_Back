@@ -49,7 +49,7 @@ public class UserService {
         setRedisTemplate(user.getEmail(), headerResponseDto.getREFRESH_TOKEN(), headerResponseDto.getRefreshTokenExpirationTime());
         addMultiHeader(response, headerResponseDto);
 */
-        return new LoginResponseDto();
+        return new LoginResponseDto(true, "로그인 완료");
     }
 
     public ResponseEntity<?> logout(HttpServletRequest request) {
