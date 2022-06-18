@@ -18,6 +18,7 @@ public class Amazons3Controller {
 
     /**
      * Amazon S3에 파일 업로드
+     *
      * @return 성공 시 200 Success와 함께 업로드 된 파일의 파일명 리스트 반환
      */
     @PostMapping("/file")
@@ -27,11 +28,12 @@ public class Amazons3Controller {
 
     /**
      * Amazon S3에 업로드 된 파일을 삭제
+     *
      * @return 성공 시 200 Success
      */
     @DeleteMapping("/file")
     public ResponseEntity deleteFile(@RequestParam String fileName) {
         awsS3Service.deleteFile(fileName);
-        return  new ResponseEntity("성공", HttpStatus.OK);
+        return new ResponseEntity<>("성공", HttpStatus.OK);
     }
 }
