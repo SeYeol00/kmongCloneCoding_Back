@@ -1,12 +1,15 @@
 package com.sparta.kmongclonecoding.controller;
 
+
+
 import com.sparta.kmongclonecoding.dto.LoginRequestDto;
+import com.sparta.kmongclonecoding.dto.LoginResponseDto;
 import com.sparta.kmongclonecoding.dto.SignupRequestDto;
 import com.sparta.kmongclonecoding.service.UserService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;

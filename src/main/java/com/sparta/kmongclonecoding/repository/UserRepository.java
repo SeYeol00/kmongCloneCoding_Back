@@ -1,9 +1,11 @@
 package com.sparta.kmongclonecoding.repository;
 
-import com.sparta.kmongclonecoding.dto.User;
+import com.sparta.kmongclonecoding.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<com.sparta.kmongclonecoding.dto.User, Long> {
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByUsername(String username);
 
     boolean existsByUsername(String username);
