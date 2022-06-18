@@ -1,6 +1,4 @@
 package com.sparta.kmongclonecoding.repository;
-
-import com.sparta.kmongclonecoding.domain.BigCategory;
 import com.sparta.kmongclonecoding.domain.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,4 +12,5 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
     List<Project> findAll();
 
 
+    Project findbyIdAndUserId(Long projectId, Long userId);
 }

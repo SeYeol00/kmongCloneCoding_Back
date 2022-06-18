@@ -2,11 +2,9 @@ package com.sparta.kmongclonecoding.service;
 
 import com.sparta.kmongclonecoding.domain.Project;
 import com.sparta.kmongclonecoding.domain.User;
-import com.sparta.kmongclonecoding.dto.HomePageResponseDefaultDto;
 import com.sparta.kmongclonecoding.dto.ProjectRequestDto;
 import com.sparta.kmongclonecoding.repository.ProjectRepository;
 import com.sparta.kmongclonecoding.repository.UserRepository;
-import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +37,6 @@ public class ProjectService {
 
     public void editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) {
         Project project =projectRepository.findbyIdAndUserId(projectId,userId);
-//        project=new Project(projectRequestDto,user);
-//        projectRepository.save(projectRequestDto);
 
     }
 }

@@ -99,5 +99,8 @@ public class Project extends Timestamped{
         this.dueDateForApplication=projectRequestDto.getDueDateForApplication();
         this.workingPeriod=projectRequestDto.getWorkingPeriod();
     }
+
+    public void update(ProjectRequestDto projectRequestDto) {
+    }
 }
 
