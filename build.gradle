@@ -30,17 +30,19 @@ dependencies {
     // s3 Bucket 설정
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     //implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
-    
-    //jwt
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'commons-codec:commons-codec:1.5'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'com.auth0:java-jwt:3.13.0'
 
     // validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-//    //sweager3
-//    implementation 'io.springfox:springfox-boot-starter:3.0.0'
-//    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    // 스프링 시큐리티
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
 //    testCompileOnly 'org.projectlombok:lombok:1.18.12' // 테스트 의존성 추가
 //    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12' // 테스트 의존성 추가

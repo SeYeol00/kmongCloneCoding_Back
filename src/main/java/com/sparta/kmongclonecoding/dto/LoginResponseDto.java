@@ -1,5 +1,14 @@
 package com.sparta.kmongclonecoding.dto;
 
+import lombok.Getter;
+
+@Getter
 public class LoginResponseDto {
-    // TODO: 2022/06/18
+    private final boolean ok;
+    private final String message;
+
+    public LoginResponseDto(boolean ok, String message) {
+        this.ok = ok;
+        this.message = message;
+    }
 }
