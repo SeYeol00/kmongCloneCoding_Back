@@ -71,8 +71,6 @@ public class ProjectService {
 
     public void editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) {
         Project project =projectRepository.findbyIdAndUserId(projectId,userId);
-//        project=new Project(projectRequestDto,user);
-//        projectRepository.save(projectRequestDto);
 
     }
 

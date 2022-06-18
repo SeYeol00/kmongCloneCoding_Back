@@ -83,6 +83,28 @@ public class Project extends Timestamped{
 
     public Project(ProjectRequestDto projectRequestDto, User user){
         this.user=user;
+        this.bigCategory=projectRequestDto.getBigCategory();
+        this.smallCategory=projectRequestDto.getSmallCategory();
+        this.progressMethod=projectRequestDto.getProgressMethod();
+        this.projectScope=projectRequestDto.getProjectScope();
+        this.title=projectRequestDto.getTitle();
+        this.currentStatus=projectRequestDto.getCurrentStatus();
+        this.requiredFunction=projectRequestDto.getRequiredFunction();
+        this.userRelatedFunction=projectRequestDto.getUserRelatedFunction();
+        this.commerceRelatedFunction=projectRequestDto.getCommerceRelatedFunction();
+        this.siteEnvironment=projectRequestDto.getSiteEnvironment();
+        this.solutionInUse=projectRequestDto.getSolutionInUse();
+        this.reactable=projectRequestDto.getReactable();
+        this.budget=projectRequestDto.getBudget();
+        this.taxInvoice=projectRequestDto.getTaxInvoice();
+        this.volunteerValidDate=projectRequestDto.getVolunteerValidDate();
+        this.dueDateForApplication=projectRequestDto.getDueDateForApplication();
+        this.workingPeriod=projectRequestDto.getWorkingPeriod();
+    }
+
+    public void update(ProjectRequestDto projectRequestDto){
+        this.bigCategory=projectRequestDto.getBigCategory();
+        this.smallCategory=projectRequestDto.getSmallCategory();
         this.progressMethod=projectRequestDto.getProgressMethod();
         this.projectScope=projectRequestDto.getProjectScope();
         this.title=projectRequestDto.getTitle();

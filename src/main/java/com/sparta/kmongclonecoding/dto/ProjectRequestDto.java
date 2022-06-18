@@ -14,6 +14,9 @@ import javax.persistence.ManyToOne;
 @Getter
 public class ProjectRequestDto {
 
+
+    private String bigCategory;
+    private String smallCategory;
     private String progressMethod;
     private String projectScope;
     private String title;
