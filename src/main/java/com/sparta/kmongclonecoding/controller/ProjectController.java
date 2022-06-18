@@ -2,6 +2,7 @@ package com.sparta.kmongclonecoding.controller;
 
 
 import com.sparta.kmongclonecoding.dto.HomePageResponseDefaultDto;
+import com.sparta.kmongclonecoding.dto.ProjectListResponseDto;
 import com.sparta.kmongclonecoding.dto.ProjectRequestDto;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import com.sparta.kmongclonecoding.service.ProjectService;
@@ -28,8 +29,12 @@ public class ProjectController {
         return projectService.getHomePageByCategory(Category);
     }
 
+    @GetMapping("/projects")
+    public List<ProjectListResponseDto> getProjectListPage(){
+        return projectService.getProjectListPage();
+    }
 
-    @GetMapping()
+
 
 
     @PostMapping("/projects/project")

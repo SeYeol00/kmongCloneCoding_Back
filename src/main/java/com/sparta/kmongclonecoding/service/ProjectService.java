@@ -3,11 +3,13 @@ package com.sparta.kmongclonecoding.service;
 import com.sparta.kmongclonecoding.domain.Project;
 import com.sparta.kmongclonecoding.domain.User;
 import com.sparta.kmongclonecoding.dto.HomePageResponseDefaultDto;
+import com.sparta.kmongclonecoding.dto.ProjectListResponseDto;
 import com.sparta.kmongclonecoding.dto.ProjectRequestDto;
 import com.sparta.kmongclonecoding.repository.ProjectRepository;
 import com.sparta.kmongclonecoding.repository.UserRepository;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,6 +53,11 @@ public class ProjectService {
         return homePageResponseDefaultDtos;
     }
 
+    public List<ProjectListResponseDto> getProjectListPage() {
+        List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
+        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"createdAt"));
+
+    }
 
 
 
@@ -68,6 +75,7 @@ public class ProjectService {
 //        projectRepository.save(projectRequestDto);
 
     }
+
 
 
 }
