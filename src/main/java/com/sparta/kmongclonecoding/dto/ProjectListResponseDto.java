@@ -16,7 +16,7 @@ public class ProjectListResponseDto {
 
     int budget;
 
-    String discription;
+    String description;
 
     int workingPeriod;
 
@@ -28,17 +28,20 @@ public class ProjectListResponseDto {
 
     String progressMethod;
 
-    public ProjectListResponseDto(Long project_id, String leftDaysForEnd, String title, int budget,String bigCategory,String smallCategory,String discription,int workingPeriod,boolean taxInvoice, String progressMethod){
+    String imageUrl;
+
+    public ProjectListResponseDto(Long project_id, String leftDaysForEnd, String title, int budget, String bigCategory, String smallCategory, String description, int workingPeriod, boolean taxInvoice, String progressMethod,String imageUrl){
         this.project_id = project_id;
         this.leftDaysForEnd = leftDaysForEnd;
         this.title = title;
         this.budget = budget;
         this.bigCategory = bigCategory;
         this.smallCategory = smallCategory;
-        this.discription = discription;
+        this.description = description;
         this.workingPeriod = workingPeriod;
         this.taxInvoice = taxInvoice;
         this.progressMethod = progressMethod;
+        this.imageUrl = imageUrl;
     }
 
 

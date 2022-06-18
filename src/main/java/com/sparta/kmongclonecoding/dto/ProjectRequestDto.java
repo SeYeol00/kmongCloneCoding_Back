@@ -1,15 +1,6 @@
 package com.sparta.kmongclonecoding.dto;
 
-import com.sparta.kmongclonecoding.domain.ProfileImages;
-import com.sparta.kmongclonecoding.domain.Project;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Getter
 public class ProjectRequestDto {

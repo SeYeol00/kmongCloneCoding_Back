@@ -18,6 +18,8 @@ public class HomePageResponseDefaultDto {
 
     int workingPeriod;
 
+    String imageUrl;
+
 
 
 

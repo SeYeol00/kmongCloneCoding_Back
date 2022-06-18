@@ -25,10 +25,6 @@ public class Project extends Timestamped{
     @JoinColumn(name = "userId")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "profileImagesId")
-    private ProfileImages profileImages;
-
     @Column(nullable = false)
     private String bigCategory;
 
@@ -83,10 +79,15 @@ public class Project extends Timestamped{
     @Column(nullable = false)
     private int workingPeriod;
 
+    @Column(nullable = false)
+    private String imageUrl;
 
 
 
-    public Project(ProjectRequestDto projectRequestDto, User user,Date volunteerValidDate,Date dueDateForApplication){
+
+
+
+    public Project(ProjectRequestDto projectRequestDto, User user,Date volunteerValidDate,Date dueDateForApplication,String imageUrl){
         this.user=user;
         this.bigCategory=projectRequestDto.getBigCategory();
         this.smallCategory=projectRequestDto.getSmallCategory();
@@ -102,9 +103,10 @@ public class Project extends Timestamped{
         this.reactable=projectRequestDto.getReactable();
         this.budget=projectRequestDto.getBudget();
         this.taxInvoice=projectRequestDto.getTaxInvoice();
-        this.volunteerValidDate=projectRequestDto.getVolunteerValidDate();
-        this.dueDateForApplication=projectRequestDto.getDueDateForApplication();
+        this.volunteerValidDate=volunteerValidDate;
+        this.dueDateForApplication=dueDateForApplication;
         this.workingPeriod=projectRequestDto.getWorkingPeriod();
+        this.imageUrl = imageUrl;
     }
 
     public void update(ProjectRequestDto projectRequestDto){

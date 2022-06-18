@@ -26,7 +26,7 @@ public class ProjectController {
         return projectService.getHomePage();
     }
 
-    @GetMapping("/")
+    @PostMapping("/")
     public List<HomePageResponseDefaultDto> getHomePageByCategory(@RequestParam String Category){
         return projectService.getHomePageByCategory(Category);
     }

@@ -21,20 +21,31 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+
+
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
+    public static String[] imageList = new String[]{
+            "https://user-images.githubusercontent.com/79959576/174434691-8fc1def9-9cfe-48bc-9530-ea01aad28bfa.jpg",
+            "https://user-images.githubusercontent.com/79959576/174434696-33b43588-3889-441b-b840-e98cd215c29b.jpg",
+            "https://user-images.githubusercontent.com/79959576/174434727-0a5417e9-09a1-4953-941e-e2a5f05aa9ec.jpg",
+            "https://user-images.githubusercontent.com/79959576/174434729-b8190447-d6d0-430d-b66d-3f7561195e54.jpg",
+            "https://user-images.githubusercontent.com/79959576/174434731-5bae8990-4e0b-484d-8ff7-b4193aac3e58.jpg"};
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
 
+
+
+
     public List<HomePageResponseDefaultDto> getHomePage() {
         List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
-        List<Project> projects = projectRepository.findAllByBigCategory("IT.PROGRMMING");
+        List<Project> projects = projectRepository.findAllByBigCategory("IT.프로그래밍");
         int count=0;
         for (Project project : projects) {
-            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod());
+            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod(), project.getImageUrl());
             homePageResponseDefaultDtos.add(homePageResponseDefaultDto);
             count+=1;
             if(count==4){
@@ -49,7 +60,7 @@ public class ProjectService {
         List<Project> projects = projectRepository.findAllByBigCategory(category);
         int count=0;
         for (Project project : projects) {
-            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod());
+            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod(), project.getImageUrl());
             homePageResponseDefaultDtos.add(homePageResponseDefaultDto);
             count+=1;
             if(count==4){
@@ -83,7 +94,8 @@ public class ProjectService {
                     project.getDescription(),
                     project.getWorkingPeriod(),
                     project.isTaxInvoice(),
-                    project.getProgressMethod());
+                    project.getProgressMethod(),
+                    project.getImageUrl());
             projectListResponseDtos.add(projectListResponseDto);
         }
 
@@ -119,7 +131,8 @@ public class ProjectService {
                     project.getDescription(),
                     project.getWorkingPeriod(),
                     project.isTaxInvoice(),
-                    project.getProgressMethod());
+                    project.getProgressMethod(),
+                    project.getImageUrl());
             projectListResponseDtos.add(projectListResponseDto);
         }
 
@@ -151,7 +164,8 @@ public class ProjectService {
                     project.getDescription(),
                     project.getWorkingPeriod(),
                     project.isTaxInvoice(),
-                    project.getProgressMethod());
+                    project.getProgressMethod(),
+                    project.getImageUrl());
             projectListResponseDtos.add(projectListResponseDto);
         }
 
@@ -160,20 +174,20 @@ public class ProjectService {
 
 
     }
-}
-
-
-
 
 
     public void createProject(ProjectRequestDto projectRequestDto, Long userId) throws ParseException {
         User user = userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );
+        double randomValue = Math.random();
+        int intValue = (int) (randomValue * 4);
+        String imageUrl = imageList[intValue];
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
         Date volunteerValidDate = formatter.parse(projectRequestDto.getVolunteerValidDate());
         Date dueDateForApplication = formatter.parse(projectRequestDto.getDueDateForApplication());
-        Project project= new Project(projectRequestDto,user,volunteerValidDate,dueDateForApplication);
+        Project project= new Project(projectRequestDto,user,volunteerValidDate,dueDateForApplication,imageUrl);
 
         projectRepository.save(project);
     }
