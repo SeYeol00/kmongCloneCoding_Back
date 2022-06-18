@@ -59,10 +59,15 @@ public class ProjectController {
 
 
     @PutMapping("/projects/project/{projectId}")
-    public Map<String,Object> editProject(@PathVariable Long projectId,
+    public Map<String,Boolean> editProject(@PathVariable Long projectId,
                                           ProjectRequestDto projectRequestDto,
-                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                          @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
        return projectService.editProject(projectId,projectRequestDto,userDetails.getUser().getId());
 
+    }
+
+    @DeleteMapping("/projects/project/{projectId}")
+    public void deleteProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        projectService.deleteProject(projectId,userDetails.getUser().getId());
     }
 }

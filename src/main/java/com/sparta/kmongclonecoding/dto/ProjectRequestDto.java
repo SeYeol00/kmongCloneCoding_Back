@@ -23,6 +23,7 @@ public class ProjectRequestDto {
     private String volunteerValidDate;
     private String dueDateForApplication;
     private int workingPeriod;
+    private String description;
 
 
 }
