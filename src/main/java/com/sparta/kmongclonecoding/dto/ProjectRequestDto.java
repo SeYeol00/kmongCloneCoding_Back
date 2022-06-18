@@ -24,11 +24,11 @@ public class ProjectRequestDto {
     private String siteEnvironment;
     private String solutionInUse;
     private String reactable;
-    private String budget;
-    private String taxInvoice;
+    private int budget;
+    private Boolean taxInvoice;
     private String volunteerValidDate;
     private String dueDateForApplication;
-    private String workingPeriod;
+    private int workingPeriod;
 
 
 }

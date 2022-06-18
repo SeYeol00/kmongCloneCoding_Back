@@ -13,5 +13,5 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 
     List<Project> findAll();
 
-    List<Project> findAllByBigCategory(BigCategory bigCategory);
+
 }
