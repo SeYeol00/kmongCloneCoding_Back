@@ -9,6 +9,7 @@ import com.sparta.kmongclonecoding.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.util.List;
@@ -42,16 +43,18 @@ public class ProjectController {
 
     @GetMapping("/projects/due")
     public List<ProjectListResponseDto> getProjectListPageByDate(){
-        return projectService.getProjectListPageByBudgetByDate();
+        return projectService.getProjectListPageByDate();
     }
 
 
 
 
     @PostMapping("/projects/project")
-    public void createProject(@RequestBody ProjectRequestDto projectRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
+    public void createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
+                              @RequestPart(value = "files") List<MultipartFile> files,
+                              @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
         //일단 리턴값 void 로 설정
-        projectService.createProject(projectRequestDto, userDetails.getUser().getId());
+        projectService.createProject(projectRequestDto, userDetails.getUser().getId(),files);
     }
 
 
