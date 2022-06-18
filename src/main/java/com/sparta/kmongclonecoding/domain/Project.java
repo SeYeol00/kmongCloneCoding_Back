@@ -19,14 +19,6 @@ public class Project extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bigCategoryId")
-    private BigCategory bigCategory;
-
-    @ManyToOne
-    @JoinColumn(name = "smallCategoryId")
-    private SmallCategory smallCategory;
-
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
@@ -34,6 +26,12 @@ public class Project extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "profileImagesId")
     private ProfileImages profileImages;
+
+    @Column(nullable = false)
+    private String bigCategory;
+
+    @Column(nullable = false)
+    private String smallCategory;
 
     @Column(nullable = false)
     private String progressMethod;
@@ -69,10 +67,10 @@ public class Project extends Timestamped{
     private String description;
 
     @Column(nullable = false)
-    private String budget;
+    private int budget;
 
     @Column(nullable = false)
-    private String taxInvoice;
+    private boolean taxInvoice;
 
     @Column(nullable = false)
     private String volunteerValidDate;
@@ -81,7 +79,7 @@ public class Project extends Timestamped{
     private String dueDateForApplication;
 
     @Column(nullable = false)
-    private String workingPeriod;
+    private int workingPeriod;
 
     public Project(ProjectRequestDto projectRequestDto, User user){
         this.user=user;
