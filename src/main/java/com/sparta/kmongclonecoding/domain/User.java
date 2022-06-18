@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Entity(name="userinfo")
 public class User {
@@ -27,6 +28,13 @@ public class User {
 
     @Column(nullable = false)
     private String job;
+
+    public User(SignupRequestDto signupRequestDto) {
+        this.username = signupRequestDto.getUsername();
+        this.password = signupRequestDto.getPassword();
+        this.businessPart = signupRequestDto.getBusinessPart();
+        this.job = signupRequestDto.getJob();
+    }
 }
 
 
