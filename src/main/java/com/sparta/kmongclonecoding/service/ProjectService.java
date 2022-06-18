@@ -45,7 +45,7 @@ public class ProjectService {
         List<Project> projects = projectRepository.findAllByBigCategory("IT.프로그래밍");
         int count=0;
         for (Project project : projects) {
-            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod());
+            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod(), project.getImageUrl());
             homePageResponseDefaultDtos.add(homePageResponseDefaultDto);
             count+=1;
             if(count==4){
@@ -60,7 +60,7 @@ public class ProjectService {
         List<Project> projects = projectRepository.findAllByBigCategory(category);
         int count=0;
         for (Project project : projects) {
-            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod());
+            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod(), project.getImageUrl());
             homePageResponseDefaultDtos.add(homePageResponseDefaultDto);
             count+=1;
             if(count==4){
@@ -94,7 +94,8 @@ public class ProjectService {
                     project.getDescription(),
                     project.getWorkingPeriod(),
                     project.isTaxInvoice(),
-                    project.getProgressMethod());
+                    project.getProgressMethod(),
+                    project.getImageUrl());
             projectListResponseDtos.add(projectListResponseDto);
         }
 
@@ -130,7 +131,8 @@ public class ProjectService {
                     project.getDescription(),
                     project.getWorkingPeriod(),
                     project.isTaxInvoice(),
-                    project.getProgressMethod());
+                    project.getProgressMethod(),
+                    project.getImageUrl());
             projectListResponseDtos.add(projectListResponseDto);
         }
 
@@ -162,7 +164,8 @@ public class ProjectService {
                     project.getDescription(),
                     project.getWorkingPeriod(),
                     project.isTaxInvoice(),
-                    project.getProgressMethod());
+                    project.getProgressMethod(),
+                    project.getImageUrl());
             projectListResponseDtos.add(projectListResponseDto);
         }
 
@@ -177,12 +180,14 @@ public class ProjectService {
         User user = userRepository.findById(userId).orElseThrow(
                 ()-> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );
-        int randomValuse
+        double randomValue = Math.random();
+        int intValue = (int) (randomValue * 4);
+        String imageUrl = imageList[intValue];
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
         Date volunteerValidDate = formatter.parse(projectRequestDto.getVolunteerValidDate());
         Date dueDateForApplication = formatter.parse(projectRequestDto.getDueDateForApplication());
-        Project project= new Project(projectRequestDto,user,volunteerValidDate,dueDateForApplication);
+        Project project= new Project(projectRequestDto,user,volunteerValidDate,dueDateForApplication,imageUrl);
 
         projectRepository.save(project);
     }
