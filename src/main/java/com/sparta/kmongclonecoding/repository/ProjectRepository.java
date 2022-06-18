@@ -11,6 +11,8 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 
     Optional<Project> findById(Long id);
 
+    List<Project> findAllByBigCategory(String bigCategory);
+
     List<Project> findAll();
 
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class HomePageResponseDefaultDto {
+public class ProjectListResponseDto {
 
 
     Long project_id;
@@ -17,9 +17,4 @@ public class HomePageResponseDefaultDto {
     String discription;
 
     int workingPeriod;
-
-
-
-
-
 }

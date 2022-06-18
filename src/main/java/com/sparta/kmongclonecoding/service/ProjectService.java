@@ -10,6 +10,7 @@ import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,13 +21,37 @@ public class ProjectService {
     private final UserRepository userRepository;
 
 
-    /*public List<HomePageResponseDefaultDto> getHomePage() {
+    public List<HomePageResponseDefaultDto> getHomePage() {
+        List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
+        List<Project> projects = projectRepository.findAllByBigCategory("IT.PROGRMMING");
+        int count=0;
+        for (Project project : projects) {
+            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod());
+            homePageResponseDefaultDtos.add(homePageResponseDefaultDto);
+            count+=1;
+            if(count==4){
+                break;
+            }
+        }
+        return homePageResponseDefaultDtos;
+    }
+
+    public List<HomePageResponseDefaultDto> getHomePageByCategory(String category) {
+        List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
+        List<Project> projects = projectRepository.findAllByBigCategory(category);
+        int count=0;
+        for (Project project : projects) {
+            HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(project.getId(),project.getTitle(), project.getBudget(), project.getDescription(), project.getWorkingPeriod());
+            homePageResponseDefaultDtos.add(homePageResponseDefaultDto);
+            count+=1;
+            if(count==4){
+                break;
+            }
+        }
+        return homePageResponseDefaultDtos;
+    }
 
 
-        findAllByBigCategory();
-
-
-    }*/
 
 
     public void createProject(ProjectRequestDto projectRequestDto, Long userId) {
@@ -43,4 +68,6 @@ public class ProjectService {
 //        projectRepository.save(projectRequestDto);
 
     }
+
+
 }
