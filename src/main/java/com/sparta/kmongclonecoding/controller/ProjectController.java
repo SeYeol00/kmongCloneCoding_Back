@@ -20,9 +20,10 @@ public class ProjectController {
     private final ProjectService projectService;
 
 
-    @GetMapping("/")
+    /*@GetMapping("/")
     public List<HomePageResponseDefaultDto> getHomePage(){
         return projectService.getHomePage();
+    }*/
     }
 
     @PostMapping("/projects/project")

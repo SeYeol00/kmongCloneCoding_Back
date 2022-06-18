@@ -20,11 +20,14 @@ public class ProjectService {
     private final UserRepository userRepository;
 
 
-    public List<HomePageResponseDefaultDto> getHomePage() {
+    /*public List<HomePageResponseDefaultDto> getHomePage() {
 
 
-        findAllByBigCategory()
-    }
+        findAllByBigCategory();
+
+
+    }*/
+
 
     public void createProject(ProjectRequestDto projectRequestDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
