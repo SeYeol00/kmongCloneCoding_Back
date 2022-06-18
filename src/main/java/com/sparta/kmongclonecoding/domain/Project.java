@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 
 @Getter
@@ -73,15 +75,18 @@ public class Project extends Timestamped{
     private boolean taxInvoice;
 
     @Column(nullable = false)
-    private String volunteerValidDate;
+    private Date volunteerValidDate;
 
     @Column(nullable = false)
-    private String dueDateForApplication;
+    private Date dueDateForApplication;
 
     @Column(nullable = false)
     private int workingPeriod;
 
-    public Project(ProjectRequestDto projectRequestDto, User user){
+
+
+
+    public Project(ProjectRequestDto projectRequestDto, User user,Date volunteerValidDate,Date dueDateForApplication){
         this.user=user;
         this.progressMethod=projectRequestDto.getProgressMethod();
         this.projectScope=projectRequestDto.getProjectScope();
@@ -95,9 +100,9 @@ public class Project extends Timestamped{
         this.reactable=projectRequestDto.getReactable();
         this.budget=projectRequestDto.getBudget();
         this.taxInvoice=projectRequestDto.getTaxInvoice();
-        this.volunteerValidDate=projectRequestDto.getVolunteerValidDate();
-        this.dueDateForApplication=projectRequestDto.getDueDateForApplication();
         this.workingPeriod=projectRequestDto.getWorkingPeriod();
+        this.volunteerValidDate = volunteerValidDate;
+        this.dueDateForApplication =dueDateForApplication;
     }
 }
 

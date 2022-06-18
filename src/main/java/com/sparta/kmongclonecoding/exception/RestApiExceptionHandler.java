@@ -17,7 +17,6 @@ public class RestApiExceptionHandler {
         RestApiException restApiException = RestApiException.of(TEMPORARY_SERVER_ERROR);
         restApiException.setHttpStatus(HttpStatus.BAD_REQUEST);
         restApiException.setErrorMessage(ex.getMessage());
-
         return new ResponseEntity<>(
                 restApiException,
                 HttpStatus.BAD_REQUEST
