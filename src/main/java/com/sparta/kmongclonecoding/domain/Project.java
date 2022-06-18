@@ -102,8 +102,8 @@ public class Project extends Timestamped{
         this.reactable=projectRequestDto.getReactable();
         this.budget=projectRequestDto.getBudget();
         this.taxInvoice=projectRequestDto.getTaxInvoice();
-        this.volunteerValidDate=projectRequestDto.getVolunteerValidDate();
-        this.dueDateForApplication=projectRequestDto.getDueDateForApplication();
+        this.volunteerValidDate=volunteerValidDate;
+        this.dueDateForApplication=dueDateForApplication;
         this.workingPeriod=projectRequestDto.getWorkingPeriod();
     }
 
