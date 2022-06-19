@@ -8,8 +8,6 @@ import com.sparta.kmongclonecoding.repository.UserRepository;
 import com.sparta.kmongclonecoding.security.filter.FormLoginFilter;
 import com.sparta.kmongclonecoding.security.filter.JwtAuthFilter;
 import com.sparta.kmongclonecoding.security.jwt.HeaderTokenExtractor;
-import com.sparta.kmongclonecoding.security.provider.FormLoginAuthProvider;
-import com.sparta.kmongclonecoding.security.provider.JWTAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

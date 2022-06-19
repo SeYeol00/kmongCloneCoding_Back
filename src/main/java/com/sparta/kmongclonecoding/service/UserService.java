@@ -2,60 +2,130 @@ package com.sparta.kmongclonecoding.service;
 
 import com.sparta.kmongclonecoding.domain.User;
 import com.sparta.kmongclonecoding.dto.LoginRequestDto;
-import com.sparta.kmongclonecoding.dto.LoginResponseDto;
 import com.sparta.kmongclonecoding.dto.SignupRequestDto;
+import com.sparta.kmongclonecoding.dto.securityDto.HeaderResponseDto;
+import com.sparta.kmongclonecoding.dto.securityDto.RefreshTokenInfo;
 import com.sparta.kmongclonecoding.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import com.sparta.kmongclonecoding.security.UserDetailsImpl;
+import com.sparta.kmongclonecoding.security.jwt.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
-@Component
-@AllArgsConstructor
+@Service
+@RequiredArgsConstructor
 public class UserService {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_TYPE = "Bearer";
-    /*
-        private final JwtTokenProvider jwtTokenProvider;
-        private final PasswordEncoder passwordEncoder;
-        private final BCryptPasswordEncoder encoder;
-
-        private final RedisTemplate<String, Object> redisTemplate;
-    */
+    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
 
-    // 회원가입
-    public ResponseEntity<?> signup(SignupRequestDto signupRequestDto) {
-        if (signupRequestDto == null) {
-            throw new IllegalArgumentException("모든 항목을 채워주세요.");
-        } else if (userRepository.existsByUsername(signupRequestDto.getUsername())) {
-            throw new IllegalArgumentException("아이디가 존재합니다.");
-        }
-        return new ResponseEntity<>(userRepository.save(new User(signupRequestDto)), HttpStatus.OK);
-    }
+    private final RedisTemplate<String, Object> redisTemplate;
 
     // 로그인
-//    public LoginResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
+    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+
         User user = userRepository.findUserByUsername(loginRequestDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
-/*
         if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 틀립니다.");
         }
-        HeaderResponseDto headerResponseDto = jwtTokenProvider.createToken(user.getEmail());
-        setRedisTemplate(user.getEmail(), headerResponseDto.getREFRESH_TOKEN(), headerResponseDto.getRefreshTokenExpirationTime());
+
+        HeaderResponseDto headerResponseDto = jwtTokenProvider.createToken(user.getUsername());
+
+        setRedisTemplate(user.getUsername(), headerResponseDto.getREFRESH_TOKEN(), headerResponseDto.getRefreshTokenExpirationTime());
         addMultiHeader(response, headerResponseDto);
-*/
-        return new LoginResponseDto(true, "로그인 완료");
     }
 
+    // 회원가입
+    public ResponseEntity<?> signup(SignupRequestDto dto) {
+
+        if (dto == null) {
+            throw new IllegalArgumentException("회원가입 실패");
+        } else if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new IllegalArgumentException("아이디가 존재합니다.");
+        } else if (userRepository.existsByNickname(dto.getNickname())) {
+            throw new IllegalArgumentException("닉네임이 존재합니다.");
+        } else {
+            dto.setPassword(encoder.encode(dto.getPassword()));
+        }
+        return new ResponseEntity<>(userRepository.save(new User(dto)), HttpStatus.OK);
+    }
+
+    public void reIssuance(UserDetailsImpl userDetails, HttpServletRequest request, HttpServletResponse response) {
+
+        String token = jwtTokenProvider.resolveToken(request);
+        if (!(jwtTokenProvider.getExpiration(token) <= 180000)) return;
+        RefreshTokenInfo tokenInfo = jwtTokenProvider.resolveRefreshToken(request);
+        // refresh 토큰 검증
+        if (!jwtTokenProvider.validateToken(tokenInfo.getREFRESH_TOKEN())) {
+            throw new RuntimeException("다시 로그인 해주세요.");
+        }
+
+        // redis 에서 저장된 refresh 가져오기
+        String refreshToken = (String) redisTemplate.opsForValue().get("RT:" + userDetails.getUsername());
+        if (ObjectUtils.isEmpty(refreshToken)) {
+            throw new RuntimeException("잘못된 요청입니다.");
+        } else if (!refreshToken.equals(tokenInfo.getREFRESH_TOKEN())) {
+            throw new RuntimeException("다시 로그인 해주세요.");
+        }
+
+        HeaderResponseDto headerDto = jwtTokenProvider.createToken(userDetails.getUsername());
+        setRedisTemplate(userDetails.getUsername(), tokenInfo.getREFRESH_TOKEN(), tokenInfo.getRefreshTokenExpirationTime());
+        addMultiHeader(response, headerDto);
+    }
+
+
     public ResponseEntity<?> logout(HttpServletRequest request) {
-//        logoutProcess(request);
+        logoutProcess(request);
         return new ResponseEntity<>("로그아웃 되었습니다.", HttpStatus.OK);
     }
 
+    public void logoutProcess(HttpServletRequest request) {
+        // 1. Access Token 검증
+        String token = jwtTokenProvider.resolveToken(request);
+        if (!jwtTokenProvider.validateToken(token)) {
+            throw new RuntimeException("잘못된 요청입니다.");
+        }
+
+        // 2. Access Token 에서 User email 을 가져옵니다.
+        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+
+        // 3. Redis 에서 해당 User email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제.
+        if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
+            // Refresh Token 삭제
+            redisTemplate.delete("RT:" + authentication.getName());
+        }
+
+        //4. logout accessToken manage
+        Long expiration = jwtTokenProvider.getExpiration(token);
+        redisTemplate.opsForValue()
+                .set(token, "logout", expiration, TimeUnit.MILLISECONDS);
+    }
+
+    // refreshToken store
+    public void setRedisTemplate(String username, String refreshToken, Long refreshTokenExpirationTime) {
+        redisTemplate.opsForValue()
+                .set("RT:" + username, refreshToken, refreshTokenExpirationTime, TimeUnit.MILLISECONDS);
+    }
+
+    //tokens add header
+    public void addMultiHeader(HttpServletResponse response, HeaderResponseDto headerResponseDto) {
+        response.addHeader(AUTHORIZATION_HEADER, BEARER_TYPE + " " + headerResponseDto.getACCESS_TOKEN());
+        response.addHeader("RefreshToken", BEARER_TYPE + " " + headerResponseDto.getREFRESH_TOKEN());
+        response.addHeader("RefreshTokenExpirationTime", String.valueOf(headerResponseDto.getRefreshTokenExpirationTime()));
+    }
 
 }
