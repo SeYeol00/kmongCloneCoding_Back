@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import static com.sparta.kmongclonecoding.exception.ErrorCode.TEMPORARY_SERVER_ERROR;
 
 
 @RestControllerAdvice//json형태로 익셉션을 처리한다.

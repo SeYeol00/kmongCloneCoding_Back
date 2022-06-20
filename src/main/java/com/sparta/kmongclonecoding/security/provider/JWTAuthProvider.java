@@ -30,7 +30,7 @@ public class JWTAuthProvider implements AuthenticationProvider {
         String username = jwtDecoder.decodeUsername(token);
 
 
-        User user = userRepository.findUserByUsername(username).orElse(null);
+        User user = userRepository.findUserByUsername(username);
 
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

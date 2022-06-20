@@ -7,6 +7,7 @@ import com.sparta.kmongclonecoding.domain.User;
 import com.sparta.kmongclonecoding.dto.KakaoUserRequestDto;
 import com.sparta.kmongclonecoding.dto.KakaoUserResponseDto;
 import com.sparta.kmongclonecoding.exception.CustomException;
+import com.sparta.kmongclonecoding.exception.ErrorCode;
 import com.sparta.kmongclonecoding.repository.UserRepository;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import com.sparta.kmongclonecoding.security.jwt.JwtTokenUtils;
