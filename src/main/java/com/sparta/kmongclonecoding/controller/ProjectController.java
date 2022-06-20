@@ -8,6 +8,7 @@ import com.sparta.kmongclonecoding.dto.ProjectRequestDto;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import com.sparta.kmongclonecoding.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,24 +62,26 @@ public class ProjectController {
 
 
     @PostMapping("/projects/project")
-    public void createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
-                              @RequestPart(value = "files") List<MultipartFile> files,
-                              @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
+    public ResponseEntity<Void> createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
+                                              @RequestPart(value = "files") List<MultipartFile> files,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
         //일단 리턴값 void 로 설정
         projectService.createProject(projectRequestDto, userDetails.getUser().getId(), files);
+        return ResponseEntity.ok().build();
     }
 
 
     @PutMapping("/projects/project/{projectId}")
     public Map<String, Boolean> editProject(@PathVariable Long projectId,
-                                            ProjectRequestDto projectRequestDto,
+                                            @RequestBody ProjectRequestDto projectRequestDto,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
         return projectService.editProject(projectId, projectRequestDto, userDetails.getUser().getId());
 
     }
 
     @DeleteMapping("/projects/project/{projectId}")
-    public void deleteProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         projectService.deleteProject(projectId, userDetails.getUser().getId());
+        return ResponseEntity.ok().build();
     }
 }
