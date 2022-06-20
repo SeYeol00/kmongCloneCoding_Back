@@ -1,7 +1,7 @@
 package com.sparta.kmongclonecoding.security;
 
-import com.sparta.kmongclonecoding.domain.User;
-import com.sparta.kmongclonecoding.repository.UserRepository;
+import com.mini.babmeokeon.model.User;
+import com.mini.babmeokeon.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,8 +19,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
+        User user = userRepository.findByUsername(username);
+
 
         return new UserDetailsImpl(user);
     }

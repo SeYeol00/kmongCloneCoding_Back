@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FilterSkipMatcher implements RequestMatcher {
+
     private final OrRequestMatcher orRequestMatcher;
     private final RequestMatcher   processingMatcher;
 
@@ -23,13 +24,13 @@ public class FilterSkipMatcher implements RequestMatcher {
         this.processingMatcher = new AntPathRequestMatcher(processingPath);
     }
 
-        /**
-         * <p>배열 [1] httpMathod 방식 post get 인지 구분</p>
-         * <p>배열 [0] 제외하는 url</p>
-         * */
     private AntPathRequestMatcher httpPath(String skipPath) {
         String[] splitStr = skipPath.split(",");
 
+        /*
+         * 배열 [1] httpMathod 방식 post get 인지 구분
+         * 배열 [0] 제외하는 url
+         * */
         return new AntPathRequestMatcher(
                 splitStr[1],
                 splitStr[0]

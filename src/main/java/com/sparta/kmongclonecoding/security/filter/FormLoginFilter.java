@@ -1,10 +1,8 @@
 package com.sparta.kmongclonecoding.security.filter;
 
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.kmongclonecoding.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,13 +12,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public class FormLoginFilter extends UsernamePasswordAuthenticationFilter {
     final private ObjectMapper objectMapper;
-    final private UserRepository userRepository;
 
-    public FormLoginFilter(final AuthenticationManager authenticationManager, UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public FormLoginFilter(final AuthenticationManager authenticationManager) {
         super.setAuthenticationManager(authenticationManager);
         objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -34,13 +29,12 @@ public class FormLoginFilter extends UsernamePasswordAuthenticationFilter {
             String username = requestBody.get("username").asText();
             String password = requestBody.get("password").asText();
             authRequest = new UsernamePasswordAuthenticationToken(username, password);
-
         } catch (Exception e) {
-
-            throw new RuntimeException("username, password 입력이 필요합니다. (JSON)");
+            throw new RuntimeException("username, password 입력이 필요합니다. (JSON)"+ e.getMessage());
         }
 
         setDetails(request, authRequest);
         return this.getAuthenticationManager().authenticate(authRequest);
     }
+
 }

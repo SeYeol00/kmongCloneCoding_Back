@@ -1,18 +1,12 @@
 package com.sparta.kmongclonecoding.security;
 
-
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.sparta.kmongclonecoding.repository.UserRepository;
-import com.sparta.kmongclonecoding.security.filter.FormLoginFilter;
-import com.sparta.kmongclonecoding.security.filter.JwtAuthFilter;
-import com.sparta.kmongclonecoding.security.jwt.HeaderTokenExtractor;
-import com.sparta.kmongclonecoding.security.provider.FormLoginAuthProvider;
-import com.sparta.kmongclonecoding.security.provider.JWTAuthProvider;
+import com.mini.babmeokeon.security.filter.FormLoginFilter;
+import com.mini.babmeokeon.security.filter.JwtAuthFilter;
+import com.mini.babmeokeon.security.jwt.HeaderTokenExtractor;
+import com.mini.babmeokeon.security.provider.FormLoginAuthProvider;
+import com.mini.babmeokeon.security.provider.JWTAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,27 +26,23 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
 @EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebConfig extends WebSecurityConfigurerAdapter {
 
     private final JWTAuthProvider jwtAuthProvider;
     private final HeaderTokenExtractor headerTokenExtractor;
-    private final UserRepository userRepository;
-    private  ObjectMapper objectMapper;
 
-    public WebSecurityConfig(
+    public WebConfig(
             JWTAuthProvider jwtAuthProvider,
-            HeaderTokenExtractor headerTokenExtractor,
-            UserRepository userRepository) {
+            HeaderTokenExtractor headerTokenExtractor
+    ) {
         this.jwtAuthProvider = jwtAuthProvider;
         this.headerTokenExtractor = headerTokenExtractor;
-        this.userRepository = userRepository;
     }
 
     @Bean
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) {
@@ -71,17 +61,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-        http.cors().configurationSource(corsConfigurationSource());
-        http.csrf().disable();
-
+        http
+                .cors()
+                .configurationSource(corsConfigurationSource())
+                .and()
+                .csrf().disable();
         // 서버에서 인증은 JWT로 인증하기 때문에 Session의 생성을 막습니다.
         http
-//                .httpBasic().disable()//rest api 만을 고려하여 기본 설정은 해제하겠습니다.
-//                .exceptionHandling()
-//                .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//토크 기반이라 세션 사용 해제.
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
 
         /*
          * 1.
@@ -94,47 +83,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
+                // .mvcMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 .anyRequest()
                 .permitAll()
                 .and()
                 // [로그아웃 기능]
                 .logout()
                 // 로그아웃 요청 처리 URL
-                .logoutUrl("/user/logout")
-                .permitAll()
-                .and()
-                .exceptionHandling()
-                // "접근 불가" 페이지 URL 설정
-                .accessDeniedPage("/forbidden.html");
+                .logoutUrl("/api/logout")
+                // .logoutSuccessUrl("/")
+                .logoutSuccessHandler(logOutSuccessHandler())
+                .permitAll();
     }
 
     @Bean
     public FormLoginFilter formLoginFilter() throws Exception {
-        FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager(), userRepository);
-        formLoginFilter.setFilterProcessesUrl("/user/login");
+        FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager());
+        formLoginFilter.setFilterProcessesUrl("/api/login");
         formLoginFilter.setAuthenticationSuccessHandler(formLoginSuccessHandler());
-        formLoginFilter.setAuthenticationFailureHandler(formLoginFailHandler());
-
+        formLoginFilter.setAuthenticationFailureHandler(formLoginFailureHandler());
         formLoginFilter.afterPropertiesSet();
         return formLoginFilter;
     }
-
+    @Bean
+    public LogOutSuccessHandler logOutSuccessHandler() {
+        return new LogOutSuccessHandler();
+    }
     @Bean
     public FormLoginSuccessHandler formLoginSuccessHandler() {
         return new FormLoginSuccessHandler();
     }
-
-
-//    public void setAuthenticationFailureHandler(AuthenticationFailureHandler failureHandler) {
-//        Assert.notNull(failureHandler, "failureHandler cannot be null");
-//        this.failureHandler = failureHandler;
-//    }
-
     @Bean
-    public FormLoginFailHandler formLoginFailHandler(){
-        return new FormLoginFailHandler();
+    public FormLoginFailureHandler formLoginFailureHandler(){
+        return new FormLoginFailureHandler();
     }
-
 
     @Bean
     public FormLoginAuthProvider formLoginAuthProvider() {
@@ -144,23 +126,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthFilter jwtFilter() throws Exception {
         List<String> skipPathList = new ArrayList<>();
 
-        // Static 정보 접근 허용
-        skipPathList.add("GET,/images/**");
-        skipPathList.add("GET,/css/**");
-
         // h2-console 허용
         skipPathList.add("GET,/h2-console/**");
         skipPathList.add("POST,/h2-console/**");
         // 회원 관리 API 허용
-        skipPathList.add("GET,/user/**");
-        skipPathList.add("POST,/user/signup");
-        skipPathList.add("POST,/images");
-        skipPathList.add("GET,/api/user/google/callback");
+        skipPathList.add("POST,/api/signup"); // 회원가입허용
+        skipPathList.add("GET,/api/checkId/**"); // 아이디 중복확인 허용
+        skipPathList.add("GET,/api/checkNickname/**"); // 닉네임 중복확인허용
+        skipPathList.add("GET,/api/stores/**"); // 메인페이지 api 허용
+        skipPathList.add("GET,/api/stores"); // 메인페이지 api 허용
 
-
-        skipPathList.add("GET,/");
-        skipPathList.add("POST,/");
-        skipPathList.add("GET,/api/getstudy/**");
+        //Swagger
+        skipPathList.add("GET,/v2/api-docs");
+        skipPathList.add("GET,/configuration/**");
+        skipPathList.add("GET,//swagger*/**");
+        skipPathList.add("GET,/webjars/**");
 
         FilterSkipMatcher matcher = new FilterSkipMatcher(
                 skipPathList,
@@ -176,26 +156,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+    // @Bean
+    // @Override
+    // public AuthenticationManager authenticationManagerBean() throws Exception {
+    //     return super.authenticationManagerBean();
+    // }
+    // CORS 설정
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
         configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.addAllowedOriginPattern("*");
-        configuration.addAllowedHeader("*");
+        configuration.addAllowedOrigin("http://jeju.project.s3-website.ap-northeast-2.amazonaws.com/");
+        configuration.addAllowedOrigin("http://jeju.project.s3-website.ap-northeast-2.amazonaws.com:3000/");
         configuration.addAllowedMethod("*");
-        configuration.addExposedHeader("Authorization");
+        configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("*");
         configuration.setAllowCredentials(true);
-
+        configuration.validateAllowCredentials();
+        configuration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
-
-
