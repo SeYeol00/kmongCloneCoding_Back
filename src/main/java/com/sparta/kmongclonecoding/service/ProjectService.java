@@ -81,6 +81,24 @@ public class ProjectService {
         return homePageResponseDefaultDtos;
     }
 
+    //mypage
+    public List<MyPageListResponseDto> getMyPageProject(Long userId) {
+        List<MyPageListResponseDto> myPageListResponseDtos = new ArrayList<>();
+        List<Project> projects =projectRepository.findAllByUserId(userId);
+        for (Project project : projects) {
+            MyPageListResponseDto myPageListResponseDto = new MyPageListResponseDto(
+                    project.getId(),
+                    project.getTitle(),
+                    project.getBudget(),
+                    project.getBigCategory(),
+                    project.getSmallCategory(),
+                    project.getImageUrl());
+            myPageListResponseDtos.add(myPageListResponseDto);
+        }
+        return myPageListResponseDtos;
+
+    }
+
     public List<ProjectListResponseDto> getProjectListPage(int page, int size, String sortBy) {
         List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
         Sort.Direction direction=sortBy.equals("volunteerValidDate")?Sort.Direction.ASC:Sort.Direction.DESC;
@@ -231,7 +249,7 @@ public class ProjectService {
 
         project.update(projectRequestDto,volunteerValidDate,dueDateForApplication);
 
-        Map<String, Boolean> responseDtoMap = new HashMap<String, Boolean>();
+        Map<String, Boolean> responseDtoMap = new HashMap<>();
 
         if (projectRequestDto.getCurrentStatus().contains(",")) {
             String[] currentStatusArr = projectRequestDto.getCurrentStatus().split(",");

@@ -2,6 +2,7 @@ package com.sparta.kmongclonecoding.controller;
 
 
 import com.sparta.kmongclonecoding.dto.HomePageResponseDefaultDto;
+import com.sparta.kmongclonecoding.dto.MyPageListResponseDto;
 import com.sparta.kmongclonecoding.dto.ProjectListResponseDto;
 import com.sparta.kmongclonecoding.dto.ProjectRequestDto;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
@@ -23,12 +24,12 @@ public class ProjectController {
 
 
     @GetMapping("/")
-    public List<HomePageResponseDefaultDto> getHomePage(){
+    public List<HomePageResponseDefaultDto> getHomePage() {
         return projectService.getHomePage();
     }
 
     @PostMapping("/")
-    public List<HomePageResponseDefaultDto> getHomePageByCategory(@RequestParam String Category){
+    public List<HomePageResponseDefaultDto> getHomePageByCategory(@RequestParam String Category) {
         return projectService.getHomePageByCategory(Category);
     }
 
@@ -38,9 +39,15 @@ public class ProjectController {
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy
     ) {
-        page=page-1;
-        return projectService.getProjectListPage(page,size,sortBy);
+        page = page - 1;
+        return projectService.getProjectListPage(page, size, sortBy);
 
+    }
+
+    @GetMapping("/mypage/projects")
+    public List<MyPageListResponseDto> getMyPageProject(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return projectService.getMyPageProject(userDetails.getUser().getId());
     }
 //    @GetMapping("/projects/budget")
 //    public List<ProjectListResponseDto> getProjectListPageByBudget(){
@@ -53,30 +60,25 @@ public class ProjectController {
 //    }
 
 
-
-
     @PostMapping("/projects/project")
     public void createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
                               @RequestPart(value = "files") List<MultipartFile> files,
                               @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
         //일단 리턴값 void 로 설정
-        projectService.createProject(projectRequestDto, userDetails.getUser().getId(),files);
+        projectService.createProject(projectRequestDto, userDetails.getUser().getId(), files);
     }
 
 
-
-
-
     @PutMapping("/projects/project/{projectId}")
-    public Map<String,Boolean> editProject(@PathVariable Long projectId,
-                                          ProjectRequestDto projectRequestDto,
-                                          @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
-       return projectService.editProject(projectId,projectRequestDto,userDetails.getUser().getId());
+    public Map<String, Boolean> editProject(@PathVariable Long projectId,
+                                            ProjectRequestDto projectRequestDto,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
+        return projectService.editProject(projectId, projectRequestDto, userDetails.getUser().getId());
 
     }
 
     @DeleteMapping("/projects/project/{projectId}")
     public void deleteProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        projectService.deleteProject(projectId,userDetails.getUser().getId());
+        projectService.deleteProject(projectId, userDetails.getUser().getId());
     }
 }
