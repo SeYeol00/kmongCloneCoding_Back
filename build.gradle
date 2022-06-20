@@ -20,7 +20,6 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.jetbrains:annotations:20.1.0'
@@ -48,6 +47,8 @@ dependencies {
     // 스프링 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 //    testCompileOnly 'org.projectlombok:lombok:1.18.12' // 테스트 의존성 추가
 //    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12' // 테스트 의존성 추가
 }

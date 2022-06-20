@@ -28,13 +28,13 @@ public class RedisRepositoryConfig {
             return new LettuceConnectionFactory(host,port);
         }
 
-        @Bean
-        public RedisTemplate<String, Object> redisTemplate() {
-            RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-            redisTemplate.setConnectionFactory(redisConnectionFactory());
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
 //        redisTemplate.setKeySerializer(new StringRedisSerializer());
 //        redisTemplate.setValueSerializer(new StringRedisSerializer());
-            return redisTemplate;
+        return redisTemplate;
     }
 
 

@@ -11,7 +11,6 @@ import com.sparta.kmongclonecoding.repository.UserRepository;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import com.sparta.kmongclonecoding.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
