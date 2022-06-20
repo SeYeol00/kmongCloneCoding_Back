@@ -33,18 +33,24 @@ public class ProjectController {
     }
 
     @GetMapping("/projects")
-    public List<ProjectListResponseDto> getProjectListPage() throws ParseException {
-        return projectService.getProjectListPage();
-    }
-    @GetMapping("/projects/budget")
-    public List<ProjectListResponseDto> getProjectListPageByBudget(){
-        return projectService.getProjectListPageByBudget();
-    }
+    public List<ProjectListResponseDto> getProjectListPage(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy
+    ) {
+        page=page-1;
+        return projectService.getProjectListPage(page,size,sortBy);
 
-    @GetMapping("/projects/due")
-    public List<ProjectListResponseDto> getProjectListPageByDate(){
-        return projectService.getProjectListPageByDate();
     }
+//    @GetMapping("/projects/budget")
+//    public List<ProjectListResponseDto> getProjectListPageByBudget(){
+//        return projectService.getProjectListPageByBudget();
+//    }
+//
+//    @GetMapping("/projects/due")
+//    public List<ProjectListResponseDto> getProjectListPageByDate(){
+//        return projectService.getProjectListPageByDate();
+//    }
 
 
 

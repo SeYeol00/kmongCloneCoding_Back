@@ -3,15 +3,15 @@ package com.sparta.kmongclonecoding.service;
 import com.sparta.kmongclonecoding.domain.File;
 import com.sparta.kmongclonecoding.domain.Project;
 import com.sparta.kmongclonecoding.domain.User;
-import com.sparta.kmongclonecoding.dto.FileRequestDto;
-import com.sparta.kmongclonecoding.dto.HomePageResponseDefaultDto;
-import com.sparta.kmongclonecoding.dto.ProjectListResponseDto;
-import com.sparta.kmongclonecoding.dto.ProjectRequestDto;
+import com.sparta.kmongclonecoding.dto.*;
 import com.sparta.kmongclonecoding.repository.FileRepository;
 import com.sparta.kmongclonecoding.repository.ProjectRepository;
 import com.sparta.kmongclonecoding.repository.UserRepository;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,9 +81,12 @@ public class ProjectService {
         return homePageResponseDefaultDtos;
     }
 
-    public List<ProjectListResponseDto> getProjectListPage() throws ParseException {
+    public List<ProjectListResponseDto> getProjectListPage(int page, int size, String sortBy) {
         List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
-        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        Sort.Direction direction=sortBy.equals("volunteerValidDate")?Sort.Direction.ASC:Sort.Direction.DESC;
+        Sort sort=Sort.by(direction,sortBy);
+        Pageable pageable= PageRequest.of(page,size,sort);
+        List<Project> projects = projectRepository.findAll(pageable).getContent();
         for (Project project : projects) {
             Calendar getToday = Calendar.getInstance();
             getToday.setTime(new Date()); //금일 날짜
@@ -118,73 +121,73 @@ public class ProjectService {
 //
 //    }
 
-    public List<ProjectListResponseDto> getProjectListPageByBudget() {
-        List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
-        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.DESC, "budget"));
-        for (Project project : projects) {
-            Calendar getToday = Calendar.getInstance();
-            getToday.setTime(new Date()); //금일 날짜
-
-            Calendar cmpDate = Calendar.getInstance();
-            cmpDate.setTime(project.getVolunteerValidDate());
-
-            long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
-            long diffDays = diffSec / (24 * 60 * 60); //일자수 차이
-            String diffDates = Long.toString(diffDays);
-
-            ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto(
-                    project.getId(),
-                    diffDates,
-                    project.getTitle(),
-                    project.getBudget(),
-                    project.getBigCategory(),
-                    project.getSmallCategory(),
-                    project.getDescription(),
-                    project.getWorkingPeriod(),
-                    project.isTaxInvoice(),
-                    project.getProgressMethod(),
-                    project.getImageUrl());
-            projectListResponseDtos.add(projectListResponseDto);
-        }
-
-        return projectListResponseDtos;
-    }
-
-
-    public List<ProjectListResponseDto> getProjectListPageByDate() {
-        List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
-        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.ASC, "volunteerValidDate"));
-        for (Project project : projects) {
-            Calendar getToday = Calendar.getInstance();
-            getToday.setTime(new Date()); //금일 날짜
-
-            Calendar cmpDate = Calendar.getInstance();
-            cmpDate.setTime(project.getVolunteerValidDate());
-
-            long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
-            long diffDays = diffSec / (24 * 60 * 60); //일자수 차이
-            String diffDates = Long.toString(diffDays);
-
-            ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto(
-                    project.getId(),
-                    diffDates,
-                    project.getTitle(),
-                    project.getBudget(),
-                    project.getBigCategory(),
-                    project.getSmallCategory(),
-                    project.getDescription(),
-                    project.getWorkingPeriod(),
-                    project.isTaxInvoice(),
-                    project.getProgressMethod(),
-                    project.getImageUrl());
-            projectListResponseDtos.add(projectListResponseDto);
-        }
-
-        return projectListResponseDtos;
-
-
-    }
-
+//    public List<ProjectListResponseDto> getProjectListPageByBudget() {
+//        List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
+//        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.DESC, "budget"));
+//        for (Project project : projects) {
+//            Calendar getToday = Calendar.getInstance();
+//            getToday.setTime(new Date()); //금일 날짜
+//
+//            Calendar cmpDate = Calendar.getInstance();
+//            cmpDate.setTime(project.getVolunteerValidDate());
+//
+//            long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
+//            long diffDays = diffSec / (24 * 60 * 60); //일자수 차이
+//            String diffDates = Long.toString(diffDays);
+//
+//            ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto(
+//                    project.getId(),
+//                    diffDates,
+//                    project.getTitle(),
+//                    project.getBudget(),
+//                    project.getBigCategory(),
+//                    project.getSmallCategory(),
+//                    project.getDescription(),
+//                    project.getWorkingPeriod(),
+//                    project.isTaxInvoice(),
+//                    project.getProgressMethod(),
+//                    project.getImageUrl());
+//            projectListResponseDtos.add(projectListResponseDto);
+//        }
+//
+//        return projectListResponseDtos;
+//    }
+//
+//
+//    public List<ProjectListResponseDto> getProjectListPageByDate() {
+//        List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
+//        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.ASC, "volunteerValidDate"));
+//        for (Project project : projects) {
+//            Calendar getToday = Calendar.getInstance();
+//            getToday.setTime(new Date()); //금일 날짜
+//
+//            Calendar cmpDate = Calendar.getInstance();
+//            cmpDate.setTime(project.getVolunteerValidDate());
+//
+//            long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
+//            long diffDays = diffSec / (24 * 60 * 60); //일자수 차이
+//            String diffDates = Long.toString(diffDays);
+//
+//            ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto(
+//                    project.getId(),
+//                    diffDates,
+//                    project.getTitle(),
+//                    project.getBudget(),
+//                    project.getBigCategory(),
+//                    project.getSmallCategory(),
+//                    project.getDescription(),
+//                    project.getWorkingPeriod(),
+//                    project.isTaxInvoice(),
+//                    project.getProgressMethod(),
+//                    project.getImageUrl());
+//            projectListResponseDtos.add(projectListResponseDto);
+//        }
+//
+//        return projectListResponseDtos;
+//
+//
+//    }
+//
 
     // ================================ 조회 메서드 종료 ===============================
 
