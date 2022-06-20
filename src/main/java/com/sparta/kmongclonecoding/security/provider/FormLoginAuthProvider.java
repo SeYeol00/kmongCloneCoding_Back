@@ -1,7 +1,7 @@
 package com.sparta.kmongclonecoding.security.provider;
 
 
-import com.mini.babmeokeon.security.UserDetailsImpl;
+import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

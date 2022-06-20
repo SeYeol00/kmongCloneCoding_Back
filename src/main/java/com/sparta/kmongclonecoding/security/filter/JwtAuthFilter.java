@@ -1,9 +1,10 @@
 package com.sparta.kmongclonecoding.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mini.babmeokeon.dto.ResponseDto;
-import com.mini.babmeokeon.security.jwt.HeaderTokenExtractor;
-import com.mini.babmeokeon.security.jwt.JwtPreProcessingToken;
+
+import com.sparta.kmongclonecoding.dto.SignupResponseDto;
+import com.sparta.kmongclonecoding.security.jwt.HeaderTokenExtractor;
+import com.sparta.kmongclonecoding.security.jwt.JwtPreProcessingToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -52,7 +53,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json");
                 ObjectMapper mapper = new ObjectMapper();
-                ResponseDto<Object> responseDto = new ResponseDto<>(false, "로그인이 필요합니다.");
+                SignupResponseDto responseDto = new SignupResponseDto(false, "로그인이 필요합니다.");
                 String result =mapper.writeValueAsString(responseDto);
                 response.getWriter().write(result);
                 return null;

@@ -1,6 +1,6 @@
 package com.sparta.kmongclonecoding.security;
 
-import com.mini.babmeokeon.model.User;
+import com.sparta.kmongclonecoding.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

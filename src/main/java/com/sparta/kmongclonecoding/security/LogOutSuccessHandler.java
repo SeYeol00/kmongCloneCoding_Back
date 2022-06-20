@@ -1,7 +1,8 @@
 package com.sparta.kmongclonecoding.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mini.babmeokeon.dto.ResponseDto;
+import com.sparta.kmongclonecoding.dto.LoginResponseDto;
+import com.sparta.kmongclonecoding.dto.ResponseDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
@@ -17,7 +18,7 @@ public class LogOutSuccessHandler implements LogoutSuccessHandler {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
-        ResponseDto<Object> responseDto = new ResponseDto<>(true, "로그아웃 성공");
+        LoginResponseDto responseDto = new LoginResponseDto(true, "로그아웃 성공"); // 로그아웃인데 귀찮아서 LoginResponseDto로 씀
         String result =mapper.writeValueAsString(responseDto);
         response.getWriter().write(result);
 

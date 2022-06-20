@@ -1,7 +1,7 @@
 package com.sparta.kmongclonecoding.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mini.babmeokeon.dto.ResponseDto;
+import com.sparta.kmongclonecoding.dto.LoginResponseDto;
 import lombok.Data;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -18,7 +18,10 @@ import java.io.IOException;
 public class FormLoginFailureHandler implements AuthenticationFailureHandler {
 
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    public void onAuthenticationFailure(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException exception) throws IOException, ServletException {
         String errorMsg = "";
 
         if (exception instanceof UsernameNotFoundException) {
@@ -34,7 +37,7 @@ public class FormLoginFailureHandler implements AuthenticationFailureHandler {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
-        ResponseDto<Object> responseDto = new ResponseDto<>(false, errorMsg);
+        LoginResponseDto responseDto = new LoginResponseDto(false, errorMsg);
         String result =mapper.writeValueAsString(responseDto);
         response.getWriter().write(result);
     }

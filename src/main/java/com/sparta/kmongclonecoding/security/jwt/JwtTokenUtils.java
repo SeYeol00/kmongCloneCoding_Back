@@ -2,7 +2,7 @@ package com.sparta.kmongclonecoding.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.mini.babmeokeon.security.UserDetailsImpl;
+import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 
 import java.util.Date;
 
