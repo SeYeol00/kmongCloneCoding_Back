@@ -10,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
+@Builder
 @Entity(name="userinfo")
 public class User {
 

@@ -167,8 +167,6 @@ public class GoogleUserService {
             googleUser = User.builder()
                     .username(username)
                     .password(encodedPassword)
-                    .nickname(nickname)
-                    .profileImage(profileImage)
                     .build();
             userRepository.save(googleUser);
         }
