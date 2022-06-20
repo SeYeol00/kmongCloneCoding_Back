@@ -52,7 +52,7 @@ public class GoogleUserService {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getAccessToken(restTemplate, code);
 
-        // 2. "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+        // 2. "액세스 토큰"으로 "구글 사용자 정보" 가져오기
         GoogleUserInfoDto snsUserInfoDto = getGoogleUserInfo(restTemplate, accessToken);
 
         // 3. "구글 사용자 정보"로 필요시 회원가입  및 이미 같은 이메일이 있으면 기존회원으로 로그인
@@ -68,8 +68,6 @@ public class GoogleUserService {
         GoogleUserResponseDto googleUserResponseDto = GoogleUserResponseDto.builder()
                 .token(TOKEN_TYPE + " " + jwt_token)
                 .username(googleUser.getUsername())
-                .nickname(googleUser.getNickname())
-                .profileImage(googleUser.getProfileImage())
                 .build();
         System.out.println("Google user's token : " + TOKEN_TYPE + " " + jwt_token);
         System.out.println("LOGIN SUCCESS!");

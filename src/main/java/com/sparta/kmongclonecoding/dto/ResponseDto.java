@@ -1,4 +1,4 @@
-package com.teamproj.backend.dto;
+package com.sparta.kmongclonecoding.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
