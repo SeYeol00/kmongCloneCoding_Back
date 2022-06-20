@@ -186,7 +186,7 @@ public class GoogleUserService {
 
     private String forceLogin(User googleUser) {
         UserDetailsImpl userDetails = UserDetailsImpl.builder()
-                .username(googleUser.getUsername())
+                .user(googleUser.getUsername())
                 .password(googleUser.getPassword())
                 .build();
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
