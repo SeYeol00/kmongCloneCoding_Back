@@ -70,7 +70,7 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // 토큰에서 회원 정보 추11출
+    // 토큰에서 회원 정보 추출
     public String getUserPk(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
@@ -95,9 +95,6 @@ public class JwtTokenProvider {
         }
         return null;
     }
-
-    // 토큰의 유효성 + 만료일자 확인
-    // 어떻게 작동하는지 모르겠음. 특히 109줄
 
     // 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {

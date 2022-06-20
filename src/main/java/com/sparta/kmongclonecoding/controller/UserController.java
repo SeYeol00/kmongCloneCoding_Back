@@ -30,8 +30,9 @@ public class UserController {
     }
 //
     @PostMapping("/login")
-    public void login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        userService.login(loginRequestDto, response);
+    public ResponseEntity<?> login(
+            @RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        return userService.login(loginRequestDto, response);
     }
 
     @PostMapping("/logout")

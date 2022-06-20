@@ -57,15 +57,15 @@ public class UserValidator {
         }
     }
 
-    public User loginValidator(LoginRequestDto loginRequestDto) {
-        User userFoundInDb = userRepository.findUserByUsername(loginRequestDto.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
-
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), userFoundInDb.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 틀립니다.");
-        }
-        return userFoundInDb;
-    }
+//    public User loginValidator(LoginRequestDto loginRequestDto) {
+//        User userFoundInDb = userRepository.findUserByUsername(loginRequestDto.getUsername()).orElseThrow(
+//                () -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
+//
+//        if (!passwordEncoder.matches(loginRequestDto.getPassword(), userFoundInDb.getPassword())) {
+//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+//        }
+//        return userFoundInDb;
+//    }
 
 
 

@@ -1,6 +1,5 @@
 package com.sparta.kmongclonecoding.security;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.kmongclonecoding.security.jwt.JwtAuthenticationFilter;
 import com.sparta.kmongclonecoding.security.jwt.JwtExceptionFilter;
@@ -37,9 +36,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public ObjectMapper objectMapper(){
+    public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
+
     // 정적 자원에 대해서는 Security 설정을 적용하지 않음.
     @Override
     public void configure(WebSecurity web) {
@@ -57,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // api 요청 접근허용
                 .antMatchers("/signup").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/post/all").permitAll()
                 .antMatchers("/post/allTags").permitAll()
@@ -69,8 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(objectMapper(),redisTemplate,jwtTokenProvider), JwtAuthenticationFilter.class);
-
+                .addFilterBefore(new JwtExceptionFilter(objectMapper(), redisTemplate, jwtTokenProvider), JwtAuthenticationFilter.class);
 
         http.cors().configurationSource(corsConfigurationSource());
     }
