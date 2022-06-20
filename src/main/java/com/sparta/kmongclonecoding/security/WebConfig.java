@@ -1,10 +1,10 @@
 package com.sparta.kmongclonecoding.security;
 
-import com.mini.babmeokeon.security.filter.FormLoginFilter;
-import com.mini.babmeokeon.security.filter.JwtAuthFilter;
-import com.mini.babmeokeon.security.jwt.HeaderTokenExtractor;
-import com.mini.babmeokeon.security.provider.FormLoginAuthProvider;
-import com.mini.babmeokeon.security.provider.JWTAuthProvider;
+import com.sparta.kmongclonecoding.security.filter.FormLoginFilter;
+import com.sparta.kmongclonecoding.security.filter.JwtAuthFilter;
+import com.sparta.kmongclonecoding.security.jwt.HeaderTokenExtractor;
+import com.sparta.kmongclonecoding.security.provider.FormLoginAuthProvider;
+import com.sparta.kmongclonecoding.security.provider.JWTAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,8 +17,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,6 @@ import java.util.List;
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
 @EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
 public class WebConfig extends WebSecurityConfigurerAdapter {
-
     private final JWTAuthProvider jwtAuthProvider;
     private final HeaderTokenExtractor headerTokenExtractor;
 

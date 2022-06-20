@@ -1,61 +1,87 @@
 package com.sparta.kmongclonecoding.service;
 
-import com.sparta.kmongclonecoding.domain.User;
-import com.sparta.kmongclonecoding.dto.LoginRequestDto;
-import com.sparta.kmongclonecoding.dto.LoginResponseDto;
+
+import com.sparta.kmongclonecoding.dto.ResponseDto;
 import com.sparta.kmongclonecoding.dto.SignupRequestDto;
+import com.sparta.kmongclonecoding.dto.SignupResponseDto;
 import com.sparta.kmongclonecoding.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-
-@Component
+@Service
 @AllArgsConstructor
 public class UserService {
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_TYPE = "Bearer";
-    /*
-        private final JwtTokenProvider jwtTokenProvider;
-        private final PasswordEncoder passwordEncoder;
-        private final BCryptPasswordEncoder encoder;
-
-        private final RedisTemplate<String, Object> redisTemplate;
-    */
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    
+    public SignupResponseDto signUp(SignupRequestDto signupRequestDto) {
+        String username = signupRequestDto.getUsername();
+        String password = signupRequestDto.getPassword();
+        String passwordCheck = signupRequestDto.getPasswordCheck();
+        String businessPart = signupRequestDto.getBusinessPart();
+        String job = signupRequestDto.getJob();
 
-    // 회원가입
-    public ResponseEntity<?> signup(SignupRequestDto signupRequestDto) {
-        if (signupRequestDto == null) {
-            throw new IllegalArgumentException("모든 항목을 채워주세요.");
-        } else if (userRepository.existsByUsername(signupRequestDto.getUsername())) {
-            throw new IllegalArgumentException("아이디가 존재합니다.");
+        if (username == null || password == null || passwordCheck == null || businessPart == null || job == null) {
+            return new SignupResponseDto(false, "모두 입력해 주세요");
         }
-        return new ResponseEntity<>(userRepository.save(new User(signupRequestDto)), HttpStatus.OK);
-    }
-
-    // 로그인
-//    public LoginResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-    public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-        User user = userRepository.findUserByUsername(loginRequestDto.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("아이디가 존재하지 않습니다."));
-/*
-        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 틀립니다.");
+        if (!username.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$")){
+            return new SignupResponseDto(false, "이메일 형식이 아닙니다.");
         }
-        HeaderResponseDto headerResponseDto = jwtTokenProvider.createToken(user.getEmail());
-        setRedisTemplate(user.getEmail(), headerResponseDto.getREFRESH_TOKEN(), headerResponseDto.getRefreshTokenExpirationTime());
-        addMultiHeader(response, headerResponseDto);
-*/
-        return new LoginResponseDto(true, "로그인 완료");
+        if (password.length() < 8 || password.length() > 20 ) {
+            return new SignupResponseDto(false,"비밀번호는 최소 8글자 이상, 20글자 이하로 작성해 주세요.");
+        }
+        if (!password.matches("^(?=.*\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,20}$")) {
+            return new SignupResponseDto(false,"비밀번호는 영문 + 숫자로 작성해 주세요.");
+        }
+        if (!password.equals(passwordCheck)) {
+            return new SignupResponseDto(false,"확인용 비밀번호가 일치하지 않습니다.");
+        }
+        if (businessPart.length() < 4 || businessPart.length() > 20 ) {
+            return new SignupResponseDto(false,"닉네임은 최소 4글자 이상, 20글자 이하로 작성해 주세요.");
+        }
+        if (!businessPart.matches("^[0-9a-zA-Z]{4,20}$")) {
+            return new SignupResponseDto(false,"닉네임은 영문 + 숫자로 작성해 주세요.");
+        }
+        if (!this.checkId(username).isResponse()) {
+            return new SignupResponseDto(false, "아이디 중복");
+        }
+        if (!this.checkNickname(businessPart).isResponse()) {
+            return new SignupResponseDto(false, "닉네임 중복");
+        }
+        signupRequestDto.setPassword(passwordEncoder.encode(password));
+        User user = new User(signupRequestDto);
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            return new SignupResponseDto(false, "알수 없는 에러 " + e.getMessage());
+        }
+
+        return new SignupResponseDto<>(true, "회원가입 성공");
     }
 
-    public ResponseEntity<?> logout(HttpServletRequest request) {
-//        logoutProcess(request);
-        return new ResponseEntity<>("로그아웃 되었습니다.", HttpStatus.OK);
+    public ResponseDto<Object> checkId(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            if (!username.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$")){
+                return new ResponseDto<>(false, "이메일 형식이 아닙니다.");
+            }
+            return new ResponseDto<>(true);
+        }
+        return new ResponseDto<>(false, "아이디 중복");
     }
 
-
+    public ResponseDto<Object> checkNickname(String nickname) {
+        User user = userRepository.findByNickname(nickname);
+        if (user == null) {
+            if (nickname.length() < 4 || nickname.length() > 20 ) {
+                return new ResponseDto<>(false,"닉네임은 최소 4글자 이상, 20글자 이하로 작성해 주세요.");
+            }
+            if (!nickname.matches("^[0-9a-zA-Z]{4,20}$")) {
+                return new ResponseDto<>(false,"닉네임은 영문 + 숫자로 작성해 주세요.");
+            }
+            return new ResponseDto<>(true);
+        }
+        return new ResponseDto<>(false, "닉네임 중복");
+    }
 }
