@@ -23,28 +23,25 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String REFRESH_HEADER = "RefreshToken";
     private static final String BEARER_TYPE = "Bearer";
+    private static final long TOKEN_VALID_TIME = 1000L * 60 * 5;     // 토큰 유효시간 5분 설정 (1000L = 1초, 1000L * 60 = 1분)
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;// 30분
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;//7일
 
-    // secretKey 와 같은 민감정보는 숨기는 것이 좋다. (이것은 연습이라서 노출함)
+    private final UserDetailsService userDetailsService; // 객체 초기화, secretKey 를 Base64로 인코딩한다.
     @Value("${jwt.secret}")
     private String secretKey;
 
-    // 토큰 유효시간 5분 설정 (1000L = 1초, 1000L * 60 = 1분)
-    private static final long TOKEN_VALID_TIME = 1000L * 60 * 5;
-
-    private final UserDetailsService userDetailsService;
-    // 객체 초기화, secretKey 를 Base64로 인코딩한다.
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
     // JWT 토큰 생성
-    public HeaderResponseDto createToken(String userPk) {
-        Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
+    public HeaderResponseDto createToken(String userPrimaryKey) {
+        Claims claims = Jwts.claims().setSubject(userPrimaryKey); // JWT payload 에 저장되는 정보단위
         Date now = new Date();
         String accessToken = Jwts.builder()
                 .setClaims(claims) // 정보 저장
@@ -53,17 +50,17 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과 signature 에 들어갈 secret값 세팅
                 .compact();
 
-        Date refreshTokenExpiresIn = new Date(now.getTime() + JwtSetting.ExpireTime.REFRESH_TOKEN_EXPIRE_TIME.getExpireTime());
+        Date refreshTokenExpiresIn = new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME);
         String refreshToken = Jwts.builder()
                 .setExpiration(refreshTokenExpiresIn)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
         return HeaderResponseDto.builder()
-                .grantType(JwtSetting.HEADER_PREFIX.getSetting())
+                .grantType(BEARER_TYPE)
                 .ACCESS_TOKEN(accessToken)
                 .REFRESH_TOKEN(refreshToken)
-                .refreshTokenExpirationTime(JwtSetting.ExpireTime.REFRESH_TOKEN_EXPIRE_TIME.getExpireTime())
+                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
     }
 

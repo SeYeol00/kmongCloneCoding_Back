@@ -8,8 +8,8 @@ import lombok.*;
 @Builder
 @ToString
 public class HeaderResponseDto {
+    private String grantType;
     private String ACCESS_TOKEN;
     private String REFRESH_TOKEN;
-    private String grantType;
     private Long refreshTokenExpirationTime;
 }

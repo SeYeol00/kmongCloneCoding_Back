@@ -1,7 +1,7 @@
 package com.sparta.kmongclonecoding.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tenzo.mini_project2.security.dto.ErrorResponse;
+import com.sparta.kmongclonecoding.dto.securityDto.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
