@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 
+import com.sparta.kmongclonecoding.domain.User;
 import com.sparta.kmongclonecoding.dto.google.GoogleOAuthRequest;
 import com.sparta.kmongclonecoding.dto.google.GoogleOAuthResponse;
 import com.sparta.kmongclonecoding.dto.google.GoogleUserInfoDto;
@@ -21,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -147,7 +148,7 @@ public class GoogleUserService {
 
         // DB 에 중복된 google Id 가 있는지 확인
         String googleUserId = googleUserInfoDto.getUsername();
-        User googleUser = userRepository.findByUsername(googleUserId)
+        User googleUser = userRepository.findUserByUsername(googleUserId)
                 .orElse(null);
 
         if (googleUser == null) {
@@ -155,22 +156,6 @@ public class GoogleUserService {
             // username: google ID(email)
             String username = googleUserInfoDto.getUsername();
 
-            // nickname: google name
-            String nickname = googleUserInfoDto.getNickname();
-            Optional<User> user = userRepository.findByNickname(nickname);
-            if(user.isPresent()) {
-                String dbUserNickname = user.get().getNickname();
-
-                int beginIndex= nickname.length();
-                String nicknameIndex = dbUserNickname.substring(beginIndex, dbUserNickname.length());
-
-                if (!nicknameIndex.isEmpty()) {
-                    int newIndex = Integer.parseInt(nicknameIndex) + 1;
-                    nickname = nickname + newIndex;
-                } else {
-                    nickname = dbUserNickname + 1;
-                }
-            }
 
             // profileImage: google profile image
             String profileImage = googleUserInfoDto.getProfileImage();
