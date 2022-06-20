@@ -46,7 +46,7 @@ public class UserController {
                 .data(googleUserService.googleLogin(code))
                 .build();
     }
-    //https://accounts.google.com/o/oauth2/v2/auth?client_id=693007930110-5u66i5c992figci0e3oh3n53sm8q6hb7.apps.googleusercontent.com&redirect_uri=http://localhost:8080/api/user/google/callback&response_type=code&scope=email%20profile%20openid&access_type=offline
+    //https://accounts.google.com/o/oauth2/v2/auth?client_id=693007930110-5u66i5c992figci0e3oh3n53sm8q6hb7.apps.googleusercontent.com&redirect_uri=http://localhost:3000/redirect/google&response_type=code&scope=email%20profile%20openid&access_type=offline
 
 /*
     @PostMapping("/logout")
