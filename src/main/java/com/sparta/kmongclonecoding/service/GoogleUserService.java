@@ -85,8 +85,8 @@ public class GoogleUserService {
                 .clientSecret(clientSecret)
                 .code(code)
                 //.redirectUri("https://memegle.xyz/redirect/google")
-                .redirectUri("http://localhost:3000/redirect/google")
-//                .redirectUri("http://localhost:8080/api/user/google/callback")
+                //.redirectUri("http://localhost:3000/redirect/google")
+                .redirectUri("http://localhost:8080/api/user/google/callback")
                 .grantType("authorization_code").build();
 
 

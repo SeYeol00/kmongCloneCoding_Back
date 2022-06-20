@@ -1,4 +1,4 @@
-package com.sparta.studywebpage.dto;
+package com.sparta.kmongclonecoding.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
