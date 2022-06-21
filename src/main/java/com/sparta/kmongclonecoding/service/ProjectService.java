@@ -104,6 +104,33 @@ public class ProjectService {
         Sort.Direction direction=sortBy.equals("volunteerValidDate")?Sort.Direction.ASC:Sort.Direction.DESC;
         Sort sort=Sort.by(direction,sortBy);
         Pageable pageable= PageRequest.of(page,size,sort);
+
+//        Page<Project> projects = projectRepository.findAll(pageable);
+//        Page<ProjectListResponseDto> projectList = projects.map((Project) -> {
+//                    for (Project project : projects) {
+//                        Calendar getToday = Calendar.getInstance();
+//                        getToday.setTime(new Date()); //금일 날짜
+//
+//                        Calendar cmpDate = Calendar.getInstance();
+//                        cmpDate.setTime(project.getVolunteerValidDate());
+//
+//                        long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
+//                        long diffDays = diffSec / (24 * 60 * 60); //일자수 차이
+//                        String diffDates = Long.toString(diffDays);
+//
+//                    ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto(
+//                            project.getId(),
+//                            diffDates,
+//                            project.getTitle(),
+//                            project.getBudget(),
+//                            project.getBigCategory(),
+//                            project.getSmallCategory(),
+//                            project.getDescription(),
+//                            project.getWorkingPeriod(),
+//                            project.isTaxInvoice(),
+//                            project.getProgressMethod(),
+//                            project.getImageUrl());
+//                   }
         List<Project> projects = projectRepository.findAll(pageable).getContent();
         for (Project project : projects) {
             Calendar getToday = Calendar.getInstance();
