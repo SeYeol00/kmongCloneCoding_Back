@@ -29,7 +29,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -131,7 +130,8 @@ public class GoogleUserService {
 
     private User registerGoogleOrUpdateGoogle(GoogleUserInfoDto googleUserInfoDto) {
 
-        User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername());
+        User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if (sameUser == null) {
             return registerGoogleUserIfNeeded(googleUserInfoDto);
@@ -147,7 +147,8 @@ public class GoogleUserService {
 
         // DB 에 중복된 google Id 가 있는지 확인
         String googleUserId = googleUserInfoDto.getUsername();
-        User googleUser = userRepository.findUserByUsername(googleUserId);
+        User googleUser = userRepository.findUserByUsername(googleUserId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         if (googleUser == null) {
             // 회원가입

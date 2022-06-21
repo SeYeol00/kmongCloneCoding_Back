@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+
 @Component
 @RequiredArgsConstructor
 public class JWTAuthProvider implements AuthenticationProvider {
@@ -30,7 +31,8 @@ public class JWTAuthProvider implements AuthenticationProvider {
         String username = jwtDecoder.decodeUsername(token);
 
 
-        User user = userRepository.findUserByUsername(username);
+        User user = userRepository.findUserByUsername(username).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
