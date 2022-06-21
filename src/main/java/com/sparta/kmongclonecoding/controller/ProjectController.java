@@ -1,10 +1,8 @@
 package com.sparta.kmongclonecoding.controller;
 
 
-import com.sparta.kmongclonecoding.dto.HomePageResponseDefaultDto;
-import com.sparta.kmongclonecoding.dto.MyPageListResponseDto;
-import com.sparta.kmongclonecoding.dto.ProjectListResponseDto;
-import com.sparta.kmongclonecoding.dto.ProjectRequestDto;
+import com.sparta.kmongclonecoding.domain.Project;
+import com.sparta.kmongclonecoding.dto.*;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import com.sparta.kmongclonecoding.service.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +58,11 @@ public class ProjectController {
 //        return projectService.getProjectListPageByDate();
 //    }
 
+    @GetMapping("/projects/{projectId}")
+    public ProjectResponseDto getProject(@PathVariable Long projectId) {
 
+        return projectService.getProject(projectId);
+    }
     @PostMapping("/projects/project")
     public ResponseEntity<Void> createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
                                               @RequestPart(value = "files") List<MultipartFile> files,

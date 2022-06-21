@@ -152,7 +152,7 @@ public class ProjectService {
                     project.getSmallCategory(),
                     project.getDescription(),
                     project.getWorkingPeriod(),
-                    project.isTaxInvoice(),
+                    project.getTaxInvoice(),
                     project.getProgressMethod(),
                     project.getImageUrl());
             projectListResponseDtos.add(projectListResponseDto);
@@ -334,5 +334,52 @@ public class ProjectService {
 //        awsS3Service.deleteFile(fileName);
 
         projectRepository.deleteById(projectId);
+    }
+
+    public ProjectResponseDto getProject(Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시글입니다.")
+        );
+
+        return ProjectResponseDto.builder()
+                .project_Id(project.getId())
+                .bigCategory(project.getBigCategory())
+                .smallCategory(project.getSmallCategory())
+                .progressMethod(project.getProgressMethod())
+                .projectScope(project.getProjectScope())
+                .title(project.getTitle())
+                .currentStatus(project.getCurrentStatus())
+                .requiredFunction(project.getRequiredFunction())
+                .userRelatedFunction(project.getUserRelatedFunction())
+                .commerceRelatedFunction(project.getCommerceRelatedFunction())
+                .siteEnvironment(project.getSiteEnvironment())
+                .solutionInUse(project.getSolutionInUse())
+                .reactable(project.getReactable())
+                .budget(project.getBudget())
+                .taxInvoice(project.getTaxInvoice())
+                .volunteerValidDate(project.getVolunteerValidDate())
+                .dueDateForApplication(project.getDueDateForApplication())
+                .workingPeriod(project.getWorkingPeriod())
+                .description(project.getDescription())
+                .build();
+// private Long project_Id;
+//    private String bigCategory;
+//    private String smallCategory;
+//    private String progressMethod;
+//    private String projectScope;
+//    private String title;
+//    private String currentStatus;
+//    private String requiredFunction;
+//    private String userRelatedFunction;
+//    private String commerceRelatedFunction;
+//    private String siteEnvironment;
+//    private String solutionInUse;
+//    private String reactable;
+//    private int budget;
+//    private Boolean taxInvoice;
+//    private String volunteerValidDate;
+//    private String dueDateForApplication;
+//    private int workingPeriod;
+//    private String description;
     }
 }

@@ -24,13 +24,13 @@ public class ProjectListResponseDto {
 
     String smallCategory;
 
-    boolean taxInvoice;
+    Boolean taxInvoice;
 
     String progressMethod;
 
     String imageUrl;
 
-    public ProjectListResponseDto(Long project_id, String leftDaysForEnd, String title, int budget, String bigCategory, String smallCategory, String description, int workingPeriod, boolean taxInvoice, String progressMethod,String imageUrl){
+    public ProjectListResponseDto(Long project_id, String leftDaysForEnd, String title, int budget, String bigCategory, String smallCategory, String description, int workingPeriod, Boolean taxInvoice, String progressMethod,String imageUrl){
         this.project_id = project_id;
         this.leftDaysForEnd = leftDaysForEnd;
         this.title = title;
