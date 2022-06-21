@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -445,24 +446,6 @@ public class ProjectService {
                 .workingPeriod(project.getWorkingPeriod())
                 .description(project.getDescription())
                 .build();
-// private Long project_Id;
-//    private String bigCategory;
-//    private String smallCategory;
-//    private String progressMethod;
-//    private String projectScope;
-//    private String title;
-//    private String currentStatus;
-//    private String requiredFunction;
-//    private String userRelatedFunction;
-//    private String commerceRelatedFunction;
-//    private String siteEnvironment;
-//    private String solutionInUse;
-//    private String reactable;
-//    private int budget;
-//    private Boolean taxInvoice;
-//    private String volunteerValidDate;
-//    private String dueDateForApplication;
-//    private int workingPeriod;
-//    private String description;
+
     }
 }
