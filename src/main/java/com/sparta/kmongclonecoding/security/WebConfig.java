@@ -156,8 +156,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("POST,/user/signup");
         skipPathList.add("POST,/images");
         skipPathList.add("GET,/api/user/google/callback");
-        skipPathList.add("POST,/s3/file");
-        skipPathList.add("DELETE,/s3/file");
 
 
         skipPathList.add("GET,/");
