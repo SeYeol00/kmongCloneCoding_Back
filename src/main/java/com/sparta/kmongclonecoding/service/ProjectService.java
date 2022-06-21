@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -113,7 +114,7 @@ public class ProjectService {
             cmpDate.setTime(project.getVolunteerValidDate());
 
             long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
-            long diffDays = diffSec / (24 * 60 * 60); //일자수 차이
+            long diffDays = diffSec / (24 * 60 * 60) - 1; //일자수 차이
             String diffDates = Long.toString(diffDays);
 
             ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto(
@@ -210,7 +211,9 @@ public class ProjectService {
     // ================================ 조회 메서드 종료 ===============================
 
 
-    public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
+    @Transactional
+//    public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
+    public void createProject(ProjectRequestDto projectRequestDto, Long userId) throws ParseException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );
@@ -225,16 +228,16 @@ public class ProjectService {
 
         Project project = new Project(projectRequestDto, user, volunteerValidDate, dueDateForApplication, imageUrl);
 
-        if (files.isEmpty()) {
+//        if (files.get(0).getName().equals("")) {
+//            projectRepository.save(project);
+//        } else {
+//            List<FileRequestDto> fileRequestDtos = awsS3Service.uploadFile(files);
+//            for (FileRequestDto fileRequestDto : fileRequestDtos) {
+//                File file = new File(fileRequestDto.getFileUrl(), fileRequestDto.getFileName(), project);
+//                fileRepository.save(file);
+//            }
             projectRepository.save(project);
-        } else {
-            List<FileRequestDto> fileRequestDtos = awsS3Service.uploadFile(files);
-            for (FileRequestDto fileRequestDto : fileRequestDtos) {
-                File file = new File(fileRequestDto.getFileUrl(), fileRequestDto.getFileName(), project);
-                fileRepository.save(file);
-            }
-            projectRepository.save(project);
-        }
+//        }
     }
 
     public Map<String,Boolean> editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) throws ParseException {
