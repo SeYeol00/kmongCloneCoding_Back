@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import static com.sparta.kmongclonecoding.exception.ErrorCode.TEMPORARY_SERVER_ERROR;
 
@@ -13,10 +14,10 @@ import static com.sparta.kmongclonecoding.exception.ErrorCode.TEMPORARY_SERVER_E
 public class RestApiExceptionHandler {
 
     @ExceptionHandler(value =  Exception.class )
-    public ResponseEntity<RestApiException> handleApiRequestException(Exception ex) {
-        RestApiException restApiException = RestApiException.of(TEMPORARY_SERVER_ERROR);
-        restApiException.setHttpStatus(HttpStatus.BAD_REQUEST);
-        restApiException.setErrorMessage(ex.getMessage());
+        public ResponseEntity<RestApiException> handleApiRequestException(Exception ex) {
+            RestApiException restApiException = RestApiException.of(TEMPORARY_SERVER_ERROR);
+            restApiException.setHttpStatus(HttpStatus.BAD_REQUEST);
+            restApiException.setErrorMessage(ex.getMessage());
         return new ResponseEntity<>(
                 restApiException,
                 HttpStatus.BAD_REQUEST

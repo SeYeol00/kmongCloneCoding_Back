@@ -23,30 +23,30 @@ public class ProjectController {
 
 
     @GetMapping("/")
-    public List<HomePageResponseDefaultDto> getHomePage() {
-        return projectService.getHomePage();
+    public ResponseEntity<List<HomePageResponseDefaultDto>>getHomePage() {
+        return ResponseEntity.ok().body(projectService.getHomePage());
     }
 
     @PostMapping("/")
-    public List<HomePageResponseDefaultDto> getHomePageByCategory(@RequestParam String Category) {
-        return projectService.getHomePageByCategory(Category);
+    public ResponseEntity<List<HomePageResponseDefaultDto>> getHomePageByCategory(@RequestParam String Category) {
+        return ResponseEntity.ok().body(projectService.getHomePageByCategory(Category));
     }
 
     @GetMapping("/projects")
-    public List<ProjectListResponseDto> getProjectListPage(
+    public ResponseEntity<List<ProjectListResponseDto>> getProjectListPage(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy
     ) {
         page = page - 1;
-        return projectService.getProjectListPage(page, size, sortBy);
+        return ResponseEntity.ok().body(projectService.getProjectListPage(page, size, sortBy));
 
     }
 
     @GetMapping("/mypage/projects")
-    public List<MyPageListResponseDto> getMyPageProject(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<List<MyPageListResponseDto>> getMyPageProject(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return projectService.getMyPageProject(userDetails.getUser().getId());
+        return ResponseEntity.ok().body(projectService.getMyPageProject(userDetails.getUser().getId()));
     }
 //    @GetMapping("/projects/budget")
 //    public List<ProjectListResponseDto> getProjectListPageByBudget(){
@@ -59,15 +59,15 @@ public class ProjectController {
 //    }
 
     @GetMapping("/projects/{projectId}")
-    public ProjectResponseDto getProject(@PathVariable Long projectId) {
+    public ResponseEntity<ProjectResponseDto> getProject(@PathVariable Long projectId) {
 
-        return projectService.getProject(projectId);
+        return ResponseEntity.ok().body(projectService.getProject(projectId));
     }
 
     @GetMapping("/projects/modal/{projectId}")
-    public UpdateProjectRequestDto getModalProject(@PathVariable Long projectId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<UpdateProjectRequestDto> getModalProject(@PathVariable Long projectId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return projectService.getModalProject(projectId,userDetails.getUser().getId());
+        return ResponseEntity.ok().body(projectService.getModalProject(projectId,userDetails.getUser().getId()));
     }
 
 
@@ -85,10 +85,10 @@ public class ProjectController {
 
 
     @PutMapping("/projects/project/{projectId}")
-    public UpdateProjectRequestDto editProject(@PathVariable Long projectId,
+    public ResponseEntity<UpdateProjectRequestDto> editProject(@PathVariable Long projectId,
                                             @RequestBody ProjectRequestDto projectRequestDto,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
-        return projectService.editProject(projectId, projectRequestDto, userDetails.getUser().getId());
+        return ResponseEntity.ok().body(projectService.editProject(projectId, projectRequestDto, userDetails.getUser().getId()));
 
     }
 
