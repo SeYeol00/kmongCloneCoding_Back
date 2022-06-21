@@ -125,6 +125,10 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthFilter jwtFilter() throws Exception {
         List<String> skipPathList = new ArrayList<>();
 
+        skipPathList.add("GET,/");
+        skipPathList.add("GET,/projects");
+        skipPathList.add("POST,/");
+
         // h2-console 허용
         skipPathList.add("GET,/h2-console/**");
         skipPathList.add("POST,/h2-console/**");

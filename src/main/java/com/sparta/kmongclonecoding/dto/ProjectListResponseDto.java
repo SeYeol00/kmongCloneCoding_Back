@@ -6,16 +6,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ProjectListResponseDto {
-
-
     Long project_id;
-
     String leftDaysForEnd;
-
     String title;
-
     int budget;
-
     String description;
 
     int workingPeriod;
