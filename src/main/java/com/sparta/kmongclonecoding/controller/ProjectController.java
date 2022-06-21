@@ -66,7 +66,7 @@ public class ProjectController {
 
 
     @GetMapping("/modal/{projectId}")
-    public UpdateProjectRequestDto getModalProject(@PathVariable Long projectId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<UpdateProjectRequestDto> getModalProject(@PathVariable Long projectId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok().body(projectService.getModalProject(projectId,userDetails.getUser().getId()));
     }
 
