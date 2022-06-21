@@ -3,8 +3,12 @@ package com.sparta.kmongclonecoding.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Date;
+
 @Getter
-public class ProjectRequestDto {
+@Builder
+public class ProjectResponseDto {
+
     private Long project_Id;
     private String bigCategory;
     private String smallCategory;
@@ -20,10 +24,8 @@ public class ProjectRequestDto {
     private String reactable;
     private int budget;
     private Boolean taxInvoice;
-    private String volunteerValidDate;
-    private String dueDateForApplication;
+    private Date volunteerValidDate;
+    private Date dueDateForApplication;
     private int workingPeriod;
     private String description;
-
-
 }

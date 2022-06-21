@@ -68,7 +68,7 @@ public class Project extends Timestamped{
     private int budget;
 
     @Column(nullable = false)
-    private boolean taxInvoice;
+    private Boolean taxInvoice;
 
     @Column(nullable = false)
     private Date volunteerValidDate;

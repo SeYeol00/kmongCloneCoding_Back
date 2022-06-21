@@ -105,6 +105,33 @@ public class ProjectService {
         Sort.Direction direction=sortBy.equals("volunteerValidDate")?Sort.Direction.ASC:Sort.Direction.DESC;
         Sort sort=Sort.by(direction,sortBy);
         Pageable pageable= PageRequest.of(page,size,sort);
+
+//        Page<Project> projects = projectRepository.findAll(pageable);
+//        Page<ProjectListResponseDto> projectList = projects.map((Project) -> {
+//                    for (Project project : projects) {
+//                        Calendar getToday = Calendar.getInstance();
+//                        getToday.setTime(new Date()); //금일 날짜
+//
+//                        Calendar cmpDate = Calendar.getInstance();
+//                        cmpDate.setTime(project.getVolunteerValidDate());
+//
+//                        long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
+//                        long diffDays = diffSec / (24 * 60 * 60); //일자수 차이
+//                        String diffDates = Long.toString(diffDays);
+//
+//                    ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto(
+//                            project.getId(),
+//                            diffDates,
+//                            project.getTitle(),
+//                            project.getBudget(),
+//                            project.getBigCategory(),
+//                            project.getSmallCategory(),
+//                            project.getDescription(),
+//                            project.getWorkingPeriod(),
+//                            project.isTaxInvoice(),
+//                            project.getProgressMethod(),
+//                            project.getImageUrl());
+//                   }
         List<Project> projects = projectRepository.findAll(pageable).getContent();
         for (Project project : projects) {
             Calendar getToday = Calendar.getInstance();
@@ -126,7 +153,7 @@ public class ProjectService {
                     project.getSmallCategory(),
                     project.getDescription(),
                     project.getWorkingPeriod(),
-                    project.isTaxInvoice(),
+                    project.getTaxInvoice(),
                     project.getProgressMethod(),
                     project.getImageUrl());
             projectListResponseDtos.add(projectListResponseDto);
@@ -310,5 +337,52 @@ public class ProjectService {
 //        awsS3Service.deleteFile(fileName);
 
         projectRepository.deleteById(projectId);
+    }
+
+    public ProjectResponseDto getProject(Long projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 게시글입니다.")
+        );
+
+        return ProjectResponseDto.builder()
+                .project_Id(project.getId())
+                .bigCategory(project.getBigCategory())
+                .smallCategory(project.getSmallCategory())
+                .progressMethod(project.getProgressMethod())
+                .projectScope(project.getProjectScope())
+                .title(project.getTitle())
+                .currentStatus(project.getCurrentStatus())
+                .requiredFunction(project.getRequiredFunction())
+                .userRelatedFunction(project.getUserRelatedFunction())
+                .commerceRelatedFunction(project.getCommerceRelatedFunction())
+                .siteEnvironment(project.getSiteEnvironment())
+                .solutionInUse(project.getSolutionInUse())
+                .reactable(project.getReactable())
+                .budget(project.getBudget())
+                .taxInvoice(project.getTaxInvoice())
+                .volunteerValidDate(project.getVolunteerValidDate())
+                .dueDateForApplication(project.getDueDateForApplication())
+                .workingPeriod(project.getWorkingPeriod())
+                .description(project.getDescription())
+                .build();
+// private Long project_Id;
+//    private String bigCategory;
+//    private String smallCategory;
+//    private String progressMethod;
+//    private String projectScope;
+//    private String title;
+//    private String currentStatus;
+//    private String requiredFunction;
+//    private String userRelatedFunction;
+//    private String commerceRelatedFunction;
+//    private String siteEnvironment;
+//    private String solutionInUse;
+//    private String reactable;
+//    private int budget;
+//    private Boolean taxInvoice;
+//    private String volunteerValidDate;
+//    private String dueDateForApplication;
+//    private int workingPeriod;
+//    private String description;
     }
 }
