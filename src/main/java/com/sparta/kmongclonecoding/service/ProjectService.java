@@ -14,9 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,7 +40,7 @@ public class ProjectService {
 
     private final FileRepository fileRepository;
 
-
+    @Transactional(readOnly=true)
     public List<HomePageResponseDefaultDto> getHomePage() {
         List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
         List<Project> projects = projectRepository.findAllByBigCategory("IT.프로그래밍");
@@ -60,7 +61,7 @@ public class ProjectService {
         }
         return homePageResponseDefaultDtos;
     }
-
+    @Transactional(readOnly=true)
     public List<HomePageResponseDefaultDto> getHomePageByCategory(String category) {
         List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
         List<Project> projects = projectRepository.findAllByBigCategory(category);
@@ -82,7 +83,8 @@ public class ProjectService {
         return homePageResponseDefaultDtos;
     }
 
-    //mypage
+
+    @Transactional(readOnly=true)//mypage
     public List<MyPageListResponseDto> getMyPageProject(Long userId) {
         List<MyPageListResponseDto> myPageListResponseDtos = new ArrayList<>();
         List<Project> projects =projectRepository.findAllByUserId(userId);
@@ -99,7 +101,7 @@ public class ProjectService {
         return myPageListResponseDtos;
 
     }
-
+    @Transactional(readOnly=true)
     public List<ProjectListResponseDto> getProjectListPage(int page, int size, String sortBy) {
         List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
         Sort.Direction direction=sortBy.equals("volunteerValidDate")?Sort.Direction.ASC:Sort.Direction.DESC;
@@ -161,61 +163,60 @@ public class ProjectService {
 
         return projectListResponseDtos;
     }
-
+    @Transactional(readOnly=true)
     public UpdateProjectRequestDto getModalProject(Long projectId,Long userId) {
         Project project =projectRepository.findByIdAndUserId(projectId,userId);
         if(project == null){
             throw new NullPointerException("존재하지 않는 프로젝트입니다.");
         }
-        Project pro = projectRepository.findById(projectId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
 
-        Date validDate  = pro.getVolunteerValidDate();
+        Date validDate  = project.getVolunteerValidDate();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String valid = transFormat.format(validDate);
 
-        Date DueDate  = pro.getDueDateForApplication();
+        Date DueDate  = project.getDueDateForApplication();
         String Due = transFormat.format(DueDate);
         Map<String, Boolean> responseDtoMap = new HashMap<>();
 
-        if (pro.getCurrentStatus().contains(",")) {
-            String[] currentStatusArr = pro.getCurrentStatus().split(",");
+        if (project.getCurrentStatus().contains(",")) {
+            String[] currentStatusArr = project.getCurrentStatus().split(",");
             extracted(responseDtoMap, currentStatusArr);
         } else {
-            responseDtoMap.put(pro.getCurrentStatus(), true);
+            responseDtoMap.put(project.getCurrentStatus(), true);
         }
-        if (pro.getRequiredFunction().contains(",")) {
-            String[] requiredFunctionArr = pro.getRequiredFunction().split(",");
+        if (project.getRequiredFunction().contains(",")) {
+            String[] requiredFunctionArr = project.getRequiredFunction().split(",");
             extracted(responseDtoMap, requiredFunctionArr);
         } else {
-            responseDtoMap.put(pro.getRequiredFunction(), true);
+            responseDtoMap.put(project.getRequiredFunction(), true);
         }
 
-        if (pro.getUserRelatedFunction().contains(",")) {
-            String[] userRelatedFunctionArr = pro.getUserRelatedFunction().split(",");
+        if (project.getUserRelatedFunction().contains(",")) {
+            String[] userRelatedFunctionArr = project.getUserRelatedFunction().split(",");
             extracted(responseDtoMap, userRelatedFunctionArr);
         } else {
-            responseDtoMap.put(pro.getUserRelatedFunction(), true);
+            responseDtoMap.put(project.getUserRelatedFunction(), true);
         }
-        if (pro.getCommerceRelatedFunction().contains(",")) {
-            String[] commerceRelatedFunctionArr = pro.getCommerceRelatedFunction().split(",");
+        if (project.getCommerceRelatedFunction().contains(",")) {
+            String[] commerceRelatedFunctionArr = project.getCommerceRelatedFunction().split(",");
             extracted(responseDtoMap, commerceRelatedFunctionArr);
         } else {
-            responseDtoMap.put(pro.getCommerceRelatedFunction(), true);
+            responseDtoMap.put(project.getCommerceRelatedFunction(), true);
         }
-        if (pro.getSiteEnvironment().contains(",")) {
-            String[] siteEnvironment = pro.getSiteEnvironment().split(",");
+        if (project.getSiteEnvironment().contains(",")) {
+            String[] siteEnvironment = project.getSiteEnvironment().split(",");
             extracted(responseDtoMap, siteEnvironment);
         } else {
-            responseDtoMap.put(pro.getSiteEnvironment(), true);
+            responseDtoMap.put(project.getSiteEnvironment(), true);
         }
-        if (pro.getSolutionInUse().contains(",")) {
-            String[] solutionInUseArr = pro.getSolutionInUse().split(",");
+        if (project.getSolutionInUse().contains(",")) {
+            String[] solutionInUseArr = project.getSolutionInUse().split(",");
             extracted(responseDtoMap, solutionInUseArr);
         } else {
-            responseDtoMap.put(pro.getSolutionInUse(), true);
+            responseDtoMap.put(project.getSolutionInUse(), true);
         }
 
-        UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(pro,responseDtoMap,valid,Due);
+        UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(project,responseDtoMap,valid,Due);
 
         return updateProjectRequestDto;
     }
@@ -304,8 +305,9 @@ public class ProjectService {
     // ================================ 조회 메서드 종료 ===============================
 
 
-    @Transactional
+
 //    public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
+    @Transactional
     public void createProject(ProjectRequestDto projectRequestDto, Long userId) throws ParseException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
@@ -332,7 +334,7 @@ public class ProjectService {
             projectRepository.save(project);
 //        }
     }
-
+    @Transactional
     public UpdateProjectRequestDto editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) throws ParseException {
         Project project =projectRepository.findByIdAndUserId(projectId,userId);
         if(project == null){
@@ -401,14 +403,12 @@ public class ProjectService {
 
         return updateProjectRequestDto;
     }
-
     private void extracted(Map<String, Boolean> responseDtoMap, String[] strArr) {
-        for (int i = 0; i <= strArr.length; i++) {
-            responseDtoMap.put(strArr[i], true);
+        for (String str: strArr) {
+            responseDtoMap.put(str, true);
         }
     }
-
-
+    @Transactional
     public void deleteProject(Long projectId, Long userId) {
         Project project =projectRepository.findByIdAndUserId(projectId,userId);
         if(project == null ){
@@ -418,7 +418,7 @@ public class ProjectService {
 
         projectRepository.deleteById(projectId);
     }
-
+    @Transactional(readOnly=true)
     public ProjectResponseDto getProject(Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시글입니다.")

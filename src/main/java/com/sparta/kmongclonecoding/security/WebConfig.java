@@ -128,6 +128,10 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/");
         skipPathList.add("GET,/projects");
         skipPathList.add("POST,/");
+        skipPathList.add("GET,/projects");
+        skipPathList.add("GET,/projects/**");
+
+
 
         // h2-console 허용
         skipPathList.add("GET,/h2-console/**");
