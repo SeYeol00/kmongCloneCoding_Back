@@ -64,7 +64,7 @@ public class ProjectController {
         return projectService.getProject(projectId);
     }
 
-    @GetMapping("/projects/modal/{projectId}")
+    @GetMapping("/modal/{projectId}")
     public UpdateProjectRequestDto getModalProject(@PathVariable Long projectId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         return projectService.getModalProject(projectId,userDetails.getUser().getId());
