@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Timestamped {
 
-    @JsonFormat(pattern ="YYYY-MM-DD")
+//    @JsonFormat(pattern ="YYYY-MM-DD")
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @JsonFormat(pattern ="YYYY-MM-DD")
+//    @JsonFormat(pattern ="YYYY-MM-DD")
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
