@@ -131,8 +131,7 @@ public class GoogleUserService {
 
     private User registerGoogleOrUpdateGoogle(GoogleUserInfoDto googleUserInfoDto) {
 
-        User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername())
-                .orElse(null);
+        User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername());
 
         if (sameUser == null) {
             return registerGoogleUserIfNeeded(googleUserInfoDto);
@@ -148,8 +147,7 @@ public class GoogleUserService {
 
         // DB 에 중복된 google Id 가 있는지 확인
         String googleUserId = googleUserInfoDto.getUsername();
-        User googleUser = userRepository.findUserByUsername(googleUserId)
-                .orElse(null);
+        User googleUser = userRepository.findUserByUsername(googleUserId);
 
         if (googleUser == null) {
             // 회원가입

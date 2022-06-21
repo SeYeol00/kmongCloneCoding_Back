@@ -22,7 +22,7 @@ public class Amazons3Controller {
      * @return 성공 시 200 Success와 함께 업로드 된 파일의 파일명 리스트 반환
      */
     @PostMapping("/file")
-    public ResponseEntity<List<String>> uploadFile(@RequestPart List<MultipartFile> multipartFile) {
+    public ResponseEntity uploadFile(@RequestPart List<MultipartFile> multipartFile) {
         return new ResponseEntity(awsS3Service.uploadFile(multipartFile), HttpStatus.OK);
     }
 
@@ -32,7 +32,7 @@ public class Amazons3Controller {
      * @return 성공 시 200 Success
      */
     @DeleteMapping("/file")
-    public ResponseEntity deleteFile(@RequestParam String fileName) {
+    public ResponseEntity deleteFile(@RequestBody String fileName) {
         awsS3Service.deleteFile(fileName);
         return new ResponseEntity<>("성공", HttpStatus.OK);
     }

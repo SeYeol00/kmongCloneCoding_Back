@@ -1,5 +1,6 @@
 package com.sparta.kmongclonecoding.security.provider;
 
+
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -7,11 +8,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.Resource;
 
 public class FormLoginAuthProvider implements AuthenticationProvider {
+
     @Resource(name="userDetailsServiceImpl")
     private UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -29,6 +32,9 @@ public class FormLoginAuthProvider implements AuthenticationProvider {
 
         // UserDetailsService 를 통해 DB에서 username 으로 사용자 조회
         UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
+        if (userDetails.getUser() == null){
+            throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
+        }
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
@@ -41,4 +47,5 @@ public class FormLoginAuthProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
+
 }

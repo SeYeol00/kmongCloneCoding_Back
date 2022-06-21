@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -237,6 +238,7 @@ public class ProjectService {
     // ================================ 조회 메서드 종료 ===============================
 
 
+    @Transactional
     public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
