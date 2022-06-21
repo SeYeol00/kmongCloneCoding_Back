@@ -161,6 +161,72 @@ public class ProjectService {
 
         return projectListResponseDtos;
     }
+
+    public UpdateProjectRequestDto getModalProject(Long projectId,Long userId) {
+        Project project =projectRepository.findByIdAndUserId(projectId,userId);
+        if(project == null){
+            throw new NullPointerException("존재하지 않는 프로젝트입니다.");
+        }
+        Project pro = projectRepository.findById(projectId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+
+        Date validDate  = pro.getVolunteerValidDate();
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+        String valid = transFormat.format(validDate);
+
+        Date DueDate  = pro.getDueDateForApplication();
+        String Due = transFormat.format(DueDate);
+        Map<String, Boolean> responseDtoMap = new HashMap<>();
+
+        if (pro.getCurrentStatus().contains(",")) {
+            String[] currentStatusArr = pro.getCurrentStatus().split(",");
+            extracted(responseDtoMap, currentStatusArr);
+        } else {
+            responseDtoMap.put(pro.getCurrentStatus(), true);
+        }
+        if (pro.getRequiredFunction().contains(",")) {
+            String[] requiredFunctionArr = pro.getRequiredFunction().split(",");
+            extracted(responseDtoMap, requiredFunctionArr);
+        } else {
+            responseDtoMap.put(pro.getRequiredFunction(), true);
+        }
+
+        if (pro.getUserRelatedFunction().contains(",")) {
+            String[] userRelatedFunctionArr = pro.getUserRelatedFunction().split(",");
+            extracted(responseDtoMap, userRelatedFunctionArr);
+        } else {
+            responseDtoMap.put(pro.getUserRelatedFunction(), true);
+        }
+        if (pro.getCommerceRelatedFunction().contains(",")) {
+            String[] commerceRelatedFunctionArr = pro.getCommerceRelatedFunction().split(",");
+            extracted(responseDtoMap, commerceRelatedFunctionArr);
+        } else {
+            responseDtoMap.put(pro.getCommerceRelatedFunction(), true);
+        }
+        if (pro.getSiteEnvironment().contains(",")) {
+            String[] siteEnvironment = pro.getSiteEnvironment().split(",");
+            extracted(responseDtoMap, siteEnvironment);
+        } else {
+            responseDtoMap.put(pro.getSiteEnvironment(), true);
+        }
+        if (pro.getSolutionInUse().contains(",")) {
+            String[] solutionInUseArr = pro.getSolutionInUse().split(",");
+            extracted(responseDtoMap, solutionInUseArr);
+        } else {
+            responseDtoMap.put(pro.getSolutionInUse(), true);
+        }
+
+        UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(pro,responseDtoMap,valid,Due);
+
+        return updateProjectRequestDto;
+    }
+
+
+
+
+
+
+
+
 //    public List<ProjectListResponseDto> getProjectListPage() {
 //        List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
 //        List<Project> projects = projectRepository.findAll(Sort.by(Sort.Direction.DESC,"createdAt"));
@@ -267,7 +333,7 @@ public class ProjectService {
 //        }
     }
 
-    public Map<String,Boolean> editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) throws ParseException {
+    public UpdateProjectRequestDto editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) throws ParseException {
         Project project =projectRepository.findByIdAndUserId(projectId,userId);
         if(project == null){
             throw new NullPointerException("존재하지 않는 프로젝트입니다.");
@@ -278,6 +344,17 @@ public class ProjectService {
         Date dueDateForApplication = formatter.parse(projectRequestDto.getDueDateForApplication());
 
         project.update(projectRequestDto,volunteerValidDate,dueDateForApplication);
+
+        Project pro = projectRepository.findById(projectId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+
+        Date validDate  = pro.getVolunteerValidDate();
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
+        String valid = transFormat.format(validDate);
+
+        Date DueDate  = pro.getDueDateForApplication();
+        String Due = transFormat.format(DueDate);
+
+
 
         Map<String, Boolean> responseDtoMap = new HashMap<>();
 
@@ -319,7 +396,10 @@ public class ProjectService {
             responseDtoMap.put(projectRequestDto.getSolutionInUse(), true);
         }
 
-        return responseDtoMap;
+
+        UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(pro,responseDtoMap,valid,Due);
+
+        return updateProjectRequestDto;
     }
 
     private void extracted(Map<String, Boolean> responseDtoMap, String[] strArr) {

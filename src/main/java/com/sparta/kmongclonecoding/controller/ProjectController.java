@@ -63,6 +63,14 @@ public class ProjectController {
 
         return projectService.getProject(projectId);
     }
+
+    @GetMapping("/projects/modal/{projectId}")
+    public UpdateProjectRequestDto getModalProject(@PathVariable Long projectId,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return projectService.getModalProject(projectId,userDetails.getUser().getId());
+    }
+
+
     @PostMapping("/projects/project")
     public ResponseEntity<Void> createProject(@RequestBody ProjectRequestDto projectRequestDto,
 //    public ResponseEntity<Void> createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
@@ -75,8 +83,9 @@ public class ProjectController {
     }
 
 
+
     @PutMapping("/projects/project/{projectId}")
-    public Map<String, Boolean> editProject(@PathVariable Long projectId,
+    public UpdateProjectRequestDto editProject(@PathVariable Long projectId,
                                             @RequestBody ProjectRequestDto projectRequestDto,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
         return projectService.editProject(projectId, projectRequestDto, userDetails.getUser().getId());
