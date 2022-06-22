@@ -20,6 +20,8 @@ public class HomePageResponseDefaultDto {
 
     String imageUrl;
 
+    int total_length;
+
 
 
 

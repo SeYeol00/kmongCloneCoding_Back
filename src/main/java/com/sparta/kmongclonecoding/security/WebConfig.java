@@ -1,5 +1,6 @@
 package com.sparta.kmongclonecoding.security;
 
+import com.sparta.kmongclonecoding.repository.UserRepository;
 import com.sparta.kmongclonecoding.security.filter.FormLoginFilter;
 import com.sparta.kmongclonecoding.security.filter.JwtAuthFilter;
 import com.sparta.kmongclonecoding.security.jwt.HeaderTokenExtractor;
@@ -30,12 +31,16 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     private final JWTAuthProvider jwtAuthProvider;
     private final HeaderTokenExtractor headerTokenExtractor;
 
+    private final UserRepository userRepository;
+
     public WebConfig(
             JWTAuthProvider jwtAuthProvider,
-            HeaderTokenExtractor headerTokenExtractor
+            HeaderTokenExtractor headerTokenExtractor,
+            UserRepository userRepository
     ) {
         this.jwtAuthProvider = jwtAuthProvider;
         this.headerTokenExtractor = headerTokenExtractor;
+        this.userRepository =userRepository;
     }
 
     @Bean
@@ -97,7 +102,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public FormLoginFilter formLoginFilter() throws Exception {
-        FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager());
+        FormLoginFilter formLoginFilter = new FormLoginFilter(authenticationManager(),userRepository);
         formLoginFilter.setFilterProcessesUrl("/api/login");
         formLoginFilter.setAuthenticationSuccessHandler(formLoginSuccessHandler());
         formLoginFilter.setAuthenticationFailureHandler(formLoginFailureHandler());
