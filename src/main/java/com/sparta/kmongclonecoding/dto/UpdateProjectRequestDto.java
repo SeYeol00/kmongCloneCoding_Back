@@ -27,7 +27,7 @@ public class UpdateProjectRequestDto {
     private int workingPeriod;
     private String description;
 
-    private List<FileRequestDto> files;
+    /*private List<FileRequestDto> files;*/
 
 
 
