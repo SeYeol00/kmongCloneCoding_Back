@@ -315,7 +315,7 @@ public class ProjectService {
 
 //    public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
     @Transactional
-    public void createProject(ProjectRequestDto projectRequestDto, Long userId) throws ParseException {
+    public void createProject(ProjectRequestDto projectRequestDto, Long userIdList,List<MultipartFile> files) throws ParseException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );
@@ -330,16 +330,16 @@ public class ProjectService {
 
         Project project = new Project(projectRequestDto, user, volunteerValidDate, dueDateForApplication, imageUrl);
 
-//        if (files.get(0).getName().equals("")) {
-//            projectRepository.save(project);
-//        } else {
-//            List<FileRequestDto> fileRequestDtos = awsS3Service.uploadFile(files);
-//            for (FileRequestDto fileRequestDto : fileRequestDtos) {
-//                File file = new File(fileRequestDto.getFileUrl(), fileRequestDto.getFileName(), project);
-//                fileRepository.save(file);
-//            }
+       if (files==null) {
+           projectRepository.save(project);
+       } else {
+           List<FileRequestDto> fileRequestDtos = awsS3Service.uploadFile(files);
+            for (FileRequestDto fileRequestDto : fileRequestDtos) {
+                File file = new File(fileRequestDto.getFileUrl(), fileRequestDto.getFileName(), project);
+                fileRepository.save(file);
+           }
             projectRepository.save(project);
-//        }
+      }
     }
     @Transactional
     public UpdateProjectRequestDto editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) throws ParseException {
