@@ -24,4 +24,6 @@ public interface ProjectRepository extends JpaRepository<Project,Long> {
 
     Project findByIdAndUserId(Long projectId, Long userId);
     List<Project> findAllByUserId(Long userId);
+
+    List<Project> findByTitleContainingOrderByCreatedAt(String keyword);
 }

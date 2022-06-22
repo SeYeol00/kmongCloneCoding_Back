@@ -72,6 +72,17 @@ public class ProjectController {
     }
 
 
+    @PostMapping("/projects/search")
+    public ResponseEntity<List<ProjectListResponseDto>> searchProject(@RequestBody String keyword){
+        return ResponseEntity.ok().body(projectService.searchProject(keyword));
+    }
+
+
+
+
+
+
+
     @PostMapping("/projects/project")
     //public ResponseEntity<Void> createProject(@RequestBody ProjectRequestDto projectRequestDto,
    public ResponseEntity<?> createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
