@@ -44,6 +44,8 @@ public class ProjectService {
     @Transactional(readOnly=true)
     public List<HomePageResponseDefaultDto> getHomePage() {
         List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
+        List<Project> All_projects = projectRepository.findAll();
+        int length = All_projects.size();
         List<Project> projects = projectRepository.findAllByBigCategory("IT.프로그래밍");
         int count = 0;
         for (Project project : projects) {
@@ -53,7 +55,8 @@ public class ProjectService {
                     project.getBudget(),
                     project.getDescription(),
                     project.getWorkingPeriod(),
-                    project.getImageUrl());
+                    project.getImageUrl(),
+                    length);
             homePageResponseDefaultDtos.add(homePageResponseDefaultDto);
             count += 1;
             if (count == 4) {
@@ -65,6 +68,8 @@ public class ProjectService {
     @Transactional(readOnly=true)
     public List<HomePageResponseDefaultDto> getHomePageByCategory(String category) {
         List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
+        List<Project> All_projects = projectRepository.findAll();
+        int length = All_projects.size();
         List<Project> projects = projectRepository.findAllByBigCategory(category);
         int count = 0;
         for (Project project : projects) {
@@ -74,7 +79,8 @@ public class ProjectService {
                     project.getBudget(),
                     project.getDescription(),
                     project.getWorkingPeriod(),
-                    project.getImageUrl());
+                    project.getImageUrl(),
+                    length);
             homePageResponseDefaultDtos.add(homePageResponseDefaultDto);
             count += 1;
             if (count == 4) {
