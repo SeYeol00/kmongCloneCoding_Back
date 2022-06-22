@@ -427,7 +427,10 @@ public class ProjectService {
         if(project == null ){
             throw new IllegalArgumentException("권한이 없습니다.");
         }
-//        awsS3Service.deleteFile(fileName);
+        List<File> fileList = fileRepository.findAllByProject(project);
+        for(File file: fileList){
+            awsS3Service.deleteFile(file.getFileName());
+        }
 
         projectRepository.deleteById(projectId);
     }

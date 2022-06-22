@@ -74,7 +74,7 @@ public class ProjectController {
 
     @PostMapping("/projects/project")
     //public ResponseEntity<Void> createProject(@RequestBody ProjectRequestDto projectRequestDto,
-   public ResponseEntity createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
+   public ResponseEntity<?> createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
                                              @RequestPart(value = "files",required = false) List<MultipartFile> files,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
         //일단 리턴값 void 로 설정
@@ -94,7 +94,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/projects/project/{projectId}")
-    public ResponseEntity deleteProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> deleteProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         projectService.deleteProject(projectId, userDetails.getUser().getId());
         return new ResponseEntity<>("삭제에 성공하였습니다.", HttpStatus.OK);
     }
