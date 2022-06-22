@@ -222,8 +222,10 @@ public class ProjectService {
         } else {
             responseDtoMap.put(project.getSolutionInUse(), true);
         }
+        List<File> files = fileRepository.findAllByProject(project);
 
         UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(project,responseDtoMap,valid,Due);
+        updateProjectRequestDto.setFiles(files);
 
         return updateProjectRequestDto;
     }
@@ -315,7 +317,7 @@ public class ProjectService {
 
 //    public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
     @Transactional
-    public void createProject(ProjectRequestDto projectRequestDto, Long userIdList,List<MultipartFile> files) throws ParseException {
+    public void createProject(ProjectRequestDto projectRequestDto, Long userId,List<MultipartFile> files) throws ParseException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );

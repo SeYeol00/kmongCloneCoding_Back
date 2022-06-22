@@ -1,9 +1,13 @@
 package com.sparta.kmongclonecoding.dto;
 
+import com.sparta.kmongclonecoding.domain.File;
 import com.sparta.kmongclonecoding.domain.Project;
 import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
+@Setter
 @Getter
 public class UpdateProjectRequestDto {
     private Long project_Id;
@@ -22,6 +26,10 @@ public class UpdateProjectRequestDto {
     private String dueDateForApplication;
     private int workingPeriod;
     private String description;
+
+    private List<File> files;
+
+
 
     public UpdateProjectRequestDto(Project project, Map<String, Boolean> responseDtoMap,String valid, String due){
         this.project_Id = project.getId();

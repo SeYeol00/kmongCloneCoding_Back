@@ -6,6 +6,7 @@ import com.sparta.kmongclonecoding.dto.*;
 import com.sparta.kmongclonecoding.security.UserDetailsImpl;
 import com.sparta.kmongclonecoding.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -73,13 +74,13 @@ public class ProjectController {
 
     @PostMapping("/projects/project")
     //public ResponseEntity<Void> createProject(@RequestBody ProjectRequestDto projectRequestDto,
-   public ResponseEntity<Void> createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
+   public ResponseEntity createProject(@RequestPart(value = "projectDto") ProjectRequestDto projectRequestDto,
                                              @RequestPart(value = "files",required = false) List<MultipartFile> files,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
         //일단 리턴값 void 로 설정
         projectService.createProject(projectRequestDto, userDetails.getUser().getId(), files);
         //projectService.createProject(projectRequestDto, userDetails.getUser().getId());
-        return ResponseEntity.ok().build();
+        return new ResponseEntity(HttpStatus.OK,"생성에 성공하였습니다.");
     }
 
 
