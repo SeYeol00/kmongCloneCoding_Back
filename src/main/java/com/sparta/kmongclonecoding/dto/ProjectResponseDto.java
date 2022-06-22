@@ -1,9 +1,11 @@
 package com.sparta.kmongclonecoding.dto;
 
+import com.sparta.kmongclonecoding.domain.File;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Builder
@@ -28,4 +30,5 @@ public class ProjectResponseDto {
     private Date dueDateForApplication;
     private int workingPeriod;
     private String description;
+    private List<File> files;
 }

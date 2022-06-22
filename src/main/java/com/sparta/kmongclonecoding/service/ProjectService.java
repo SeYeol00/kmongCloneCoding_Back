@@ -439,6 +439,7 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시글입니다.")
         );
+        List<File> fileList = fileRepository.findAllByProject(project);
 
         return ProjectResponseDto.builder()
                 .project_Id(project.getId())
@@ -460,6 +461,7 @@ public class ProjectService {
                 .dueDateForApplication(project.getDueDateForApplication())
                 .workingPeriod(project.getWorkingPeriod())
                 .description(project.getDescription())
+                .files(fileList)
                 .build();
 
     }
