@@ -33,9 +33,11 @@ public class FormLoginAuthProvider implements AuthenticationProvider {
 
         // UserDetailsService 를 통해 DB에서 username 으로 사용자 조회
         UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
-
+        if (userDetails.getUser() == null){
+            throw new UsernameNotFoundException("아이디가 존재하지 않습니다.");
+        }
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException(userDetails.getUsername() + "Invalid password");
+            throw new BadCredentialsException(userDetails.getUsername() + "옳지않는 비밀번호입니다.");
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
