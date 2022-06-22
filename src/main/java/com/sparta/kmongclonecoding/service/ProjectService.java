@@ -41,7 +41,7 @@ public class ProjectService {
 
     private final FileRepository fileRepository;
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<HomePageResponseDefaultDto> getHomePage() {
         List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
         List<Project> All_projects = projectRepository.findAll();
@@ -65,7 +65,8 @@ public class ProjectService {
         }
         return homePageResponseDefaultDtos;
     }
-    @Transactional(readOnly=true)
+
+    @Transactional(readOnly = true)
     public List<HomePageResponseDefaultDto> getHomePageByCategory(String category) {
         List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
         List<Project> All_projects = projectRepository.findAll();
@@ -91,10 +92,10 @@ public class ProjectService {
     }
 
 
-    @Transactional(readOnly=true)//mypage
+    @Transactional(readOnly = true)//mypage
     public List<MyPageListResponseDto> getMyPageProject(Long userId) {
         List<MyPageListResponseDto> myPageListResponseDtos = new ArrayList<>();
-        List<Project> projects =projectRepository.findAllByUserId(userId);
+        List<Project> projects = projectRepository.findAllByUserId(userId);
         for (Project project : projects) {
             MyPageListResponseDto myPageListResponseDto = new MyPageListResponseDto(
                     project.getId(),
@@ -108,12 +109,17 @@ public class ProjectService {
         return myPageListResponseDtos;
 
     }
-    @Transactional(readOnly=true)
+
+    @Transactional(readOnly = true)
     public List<ProjectListResponseDto> getProjectListPage(int page, int size, String sortBy) {
+        List<Project> projectList = projectRepository.findAll();
+
+        int total_length = projectList.size();
+
         List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
-        Sort.Direction direction=sortBy.equals("volunteerValidDate")?Sort.Direction.ASC:Sort.Direction.DESC;
-        Sort sort=Sort.by(direction,sortBy);
-        Pageable pageable= PageRequest.of(page,size,sort);
+        Sort.Direction direction = sortBy.equals("volunteerValidDate") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
 //        Page<Project> projects = projectRepository.findAll(pageable);
 //        Page<ProjectListResponseDto> projectList = projects.map((Project) -> {
@@ -164,24 +170,26 @@ public class ProjectService {
                     project.getWorkingPeriod(),
                     project.getTaxInvoice(),
                     project.getProgressMethod(),
-                    project.getImageUrl());
+                    project.getImageUrl(),
+                    total_length);
             projectListResponseDtos.add(projectListResponseDto);
         }
 
         return projectListResponseDtos;
     }
-    @Transactional(readOnly=true)
-    public UpdateProjectRequestDto getModalProject(Long projectId,Long userId) {
-        Project project =projectRepository.findByIdAndUserId(projectId,userId);
-        if(project == null){
+
+    @Transactional(readOnly = true)
+    public UpdateProjectRequestDto getModalProject(Long projectId, Long userId) {
+        Project project = projectRepository.findByIdAndUserId(projectId, userId);
+        if (project == null) {
             throw new NullPointerException("존재하지 않는 프로젝트입니다.");
         }
 
-        Date validDate  = project.getVolunteerValidDate();
+        Date validDate = project.getVolunteerValidDate();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String valid = transFormat.format(validDate);
 
-        Date DueDate  = project.getDueDateForApplication();
+        Date DueDate = project.getDueDateForApplication();
         String Due = transFormat.format(DueDate);
         Map<String, Boolean> responseDtoMap = new HashMap<>();
 
@@ -224,7 +232,7 @@ public class ProjectService {
         }
         List<File> files = fileRepository.findAllByProject(project);
         List<FileRequestDto> fileRequestDtos = new ArrayList<>();
-        UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(project,responseDtoMap,valid,Due);
+        UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(project, responseDtoMap, valid, Due);
         /*for(File file:files){
             FileRequestDto fileRequestDto = new FileRequestDto(file.getFileUrl(), file.getFileName());
             fileRequestDtos.add(fileRequestDto);
@@ -233,12 +241,6 @@ public class ProjectService {
 
         return updateProjectRequestDto;
     }
-
-
-
-
-
-
 
 
 //    public List<ProjectListResponseDto> getProjectListPage() {
@@ -314,14 +316,54 @@ public class ProjectService {
 //
 //    }
 //
+public List<ProjectListResponseDto> searchProject(String keyword) {
+    List<Project> projectList = projectRepository.findAll();
+
+    int total_length = projectList.size();
+    List<ProjectListResponseDto> projectListResponseDtos = new ArrayList<>();
+        /*Sort.Direction direction=sortBy.equals("volunteerValidDate")?Sort.Direction.ASC:Sort.Direction.DESC;
+        Sort sort=Sort.by(direction,sortBy);
+        Pageable pageable= PageRequest.of(page,size,sort);*/
+    List<Project> projects = projectRepository.findByTitleContainingOrderByCreatedAt(keyword);
+    for (Project project : projects) {
+        Calendar getToday = Calendar.getInstance();
+        getToday.setTime(new Date()); //금일 날짜
+
+        Calendar cmpDate = Calendar.getInstance();
+        cmpDate.setTime(project.getVolunteerValidDate());
+
+        long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
+        long diffDays = diffSec / (24 * 60 * 60) - 1; //일자수 차이
+        String diffDates = Long.toString(diffDays);
+
+        ProjectListResponseDto projectListResponseDto = new ProjectListResponseDto(
+                project.getId(),
+                diffDates,
+                project.getTitle(),
+                project.getBudget(),
+                project.getBigCategory(),
+                project.getSmallCategory(),
+                project.getDescription(),
+                project.getWorkingPeriod(),
+                project.getTaxInvoice(),
+                project.getProgressMethod(),
+                project.getImageUrl(),
+                total_length);
+        projectListResponseDtos.add(projectListResponseDto);
+
+    }return projectListResponseDtos;
+}
+
+
+
+
 
     // ================================ 조회 메서드 종료 ===============================
 
 
-
-//    public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
+    //    public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
     @Transactional
-    public void createProject(ProjectRequestDto projectRequestDto, Long userId,List<MultipartFile> files) throws ParseException {
+    public void createProject(ProjectRequestDto projectRequestDto, Long userId, List<MultipartFile> files) throws ParseException {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );
@@ -336,21 +378,22 @@ public class ProjectService {
 
         Project project = new Project(projectRequestDto, user, volunteerValidDate, dueDateForApplication, imageUrl);
 
-       if (files==null) {
-           projectRepository.save(project);
-       } else {
-           List<FileRequestDto> fileRequestDtos = awsS3Service.uploadFile(files);
+        if (files == null) {
+            projectRepository.save(project);
+        } else {
+            List<FileRequestDto> fileRequestDtos = awsS3Service.uploadFile(files);
             for (FileRequestDto fileRequestDto : fileRequestDtos) {
                 File file = new File(fileRequestDto.getFileUrl(), fileRequestDto.getFileName(), project);
                 fileRepository.save(file);
-           }
+            }
             projectRepository.save(project);
-      }
+        }
     }
+
     @Transactional
-    public UpdateProjectRequestDto editProject(Long projectId, ProjectRequestDto projectRequestDto,Long userId) throws ParseException {
-        Project project =projectRepository.findByIdAndUserId(projectId,userId);
-        if(project == null){
+    public UpdateProjectRequestDto editProject(Long projectId, ProjectRequestDto projectRequestDto, Long userId) throws ParseException {
+        Project project = projectRepository.findByIdAndUserId(projectId, userId);
+        if (project == null) {
             throw new NullPointerException("존재하지 않는 프로젝트입니다.");
         }
 
@@ -358,17 +401,16 @@ public class ProjectService {
         Date volunteerValidDate = formatter.parse(projectRequestDto.getVolunteerValidDate());
         Date dueDateForApplication = formatter.parse(projectRequestDto.getDueDateForApplication());
 
-        project.update(projectRequestDto,volunteerValidDate,dueDateForApplication);
+        project.update(projectRequestDto, volunteerValidDate, dueDateForApplication);
 
-        Project pro = projectRepository.findById(projectId).orElseThrow(()->new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
+        Project pro = projectRepository.findById(projectId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 프로젝트입니다."));
 
-        Date validDate  = pro.getVolunteerValidDate();
+        Date validDate = pro.getVolunteerValidDate();
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy.MM.dd");
         String valid = transFormat.format(validDate);
 
-        Date DueDate  = pro.getDueDateForApplication();
+        Date DueDate = pro.getDueDateForApplication();
         String Due = transFormat.format(DueDate);
-
 
 
         Map<String, Boolean> responseDtoMap = new HashMap<>();
@@ -412,29 +454,32 @@ public class ProjectService {
         }
 
 
-        UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(pro,responseDtoMap,valid,Due);
+        UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(pro, responseDtoMap, valid, Due);
 
         return updateProjectRequestDto;
     }
+
     private void extracted(Map<String, Boolean> responseDtoMap, String[] strArr) {
-        for (String str: strArr) {
+        for (String str : strArr) {
             responseDtoMap.put(str, true);
         }
     }
+
     @Transactional
     public void deleteProject(Long projectId, Long userId) {
-        Project project =projectRepository.findByIdAndUserId(projectId,userId);
-        if(project == null ){
+        Project project = projectRepository.findByIdAndUserId(projectId, userId);
+        if (project == null) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
         List<File> fileList = fileRepository.findAllByProject(project);
-        for(File file: fileList){
+        for (File file : fileList) {
             awsS3Service.deleteFile(file.getFileName());
         }
 
         projectRepository.deleteById(projectId);
     }
-    @Transactional(readOnly=true)
+
+    @Transactional(readOnly = true)
     public ProjectResponseDto getProject(Long projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않는 게시글입니다.")
@@ -465,4 +510,8 @@ public class ProjectService {
                 .build();
 
     }
+
+
+
+
 }
