@@ -80,7 +80,7 @@ public class ProjectController {
         //일단 리턴값 void 로 설정
         projectService.createProject(projectRequestDto, userDetails.getUser().getId(), files);
         //projectService.createProject(projectRequestDto, userDetails.getUser().getId());
-        return new ResponseEntity(HttpStatus.OK,"생성에 성공하였습니다.");
+        return new ResponseEntity<>("생성에 성공하였습니다.", HttpStatus.OK);
     }
 
 
@@ -94,8 +94,8 @@ public class ProjectController {
     }
 
     @DeleteMapping("/projects/project/{projectId}")
-    public ResponseEntity<Void> deleteProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity deleteProject(@PathVariable Long projectId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         projectService.deleteProject(projectId, userDetails.getUser().getId());
-        return ResponseEntity.ok().build();
+        return new ResponseEntity<>("삭제에 성공하였습니다.", HttpStatus.OK);
     }
 }
