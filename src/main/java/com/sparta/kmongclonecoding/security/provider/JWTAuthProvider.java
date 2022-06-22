@@ -30,9 +30,9 @@ public class JWTAuthProvider implements AuthenticationProvider {
         String token = (String) authentication.getPrincipal();
         String username = jwtDecoder.decodeUsername(token);
 
-
-        User user = userRepository.findUserByUsername(username).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+//        User user = userRepository.findUserByUsername(username).orElseThrow(
+//                () -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+        User user = userRepository.findUserByUsername(username);
 
         UserDetailsImpl userDetails = new UserDetailsImpl(user);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

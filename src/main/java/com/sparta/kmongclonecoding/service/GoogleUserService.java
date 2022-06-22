@@ -130,15 +130,16 @@ public class GoogleUserService {
 
     private User registerGoogleOrUpdateGoogle(GoogleUserInfoDto googleUserInfoDto) {
 
-        User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+//        User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername()).orElseThrow(
+//                () -> new IllegalArgumentException("없는 회원입니다."));
+        User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername());
 
         if (sameUser == null) {
             return registerGoogleUserIfNeeded(googleUserInfoDto);
         }
 //        else {
 //            return updateGoogleUser(sameUser, googleUserInfoDto);
-//        }
+//        }`
 
         return sameUser;
     }
@@ -147,8 +148,10 @@ public class GoogleUserService {
 
         // DB 에 중복된 google Id 가 있는지 확인
         String googleUserId = googleUserInfoDto.getUsername();
-        User googleUser = userRepository.findUserByUsername(googleUserId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+//        User googleUser = userRepository.findUserByUsername(googleUserId).orElseThrow(
+//                () -> new IllegalArgumentException("없는 회원입니다."));;
+        User googleUser = userRepository.findUserByUsername(googleUserId);
 
         if (googleUser == null) {
             // 회원가입
