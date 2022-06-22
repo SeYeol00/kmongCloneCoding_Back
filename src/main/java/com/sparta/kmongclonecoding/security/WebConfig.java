@@ -147,6 +147,8 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
         skipPathList.add("GET,/api/checkNickname/**"); // 닉네임 중복확인허용
         skipPathList.add("GET,/api/stores/**"); // 메인페이지 api 허용
         skipPathList.add("GET,/api/stores"); // 메인페이지 api 허용
+        skipPathList.add("GET,/api/user/google/callback");
+        skipPathList.add("GET,/user/kakao/callback");
 
         //Swagger
         skipPathList.add("GET,/v2/api-docs");

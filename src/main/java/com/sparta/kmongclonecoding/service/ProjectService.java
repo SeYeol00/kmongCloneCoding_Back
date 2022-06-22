@@ -225,11 +225,11 @@ public class ProjectService {
         List<File> files = fileRepository.findAllByProject(project);
         List<FileRequestDto> fileRequestDtos = new ArrayList<>();
         UpdateProjectRequestDto updateProjectRequestDto = new UpdateProjectRequestDto(project,responseDtoMap,valid,Due);
-        for(File file:files){
+        /*for(File file:files){
             FileRequestDto fileRequestDto = new FileRequestDto(file.getFileUrl(), file.getFileName());
             fileRequestDtos.add(fileRequestDto);
         }
-        updateProjectRequestDto.setFiles(fileRequestDtos);
+        updateProjectRequestDto.setFiles(fileRequestDtos);*/
 
         return updateProjectRequestDto;
     }

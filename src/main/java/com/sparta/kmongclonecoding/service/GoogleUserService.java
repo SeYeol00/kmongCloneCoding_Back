@@ -129,19 +129,15 @@ public class GoogleUserService {
 
 
     private User registerGoogleOrUpdateGoogle(GoogleUserInfoDto googleUserInfoDto) {
-
-//        User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername()).orElseThrow(
-//                () -> new IllegalArgumentException("없는 회원입니다."));
         User sameUser = userRepository.findUserByUsername(googleUserInfoDto.getUsername());
 
         if (sameUser == null) {
             return registerGoogleUserIfNeeded(googleUserInfoDto);
         }
-//        else {
-//            return updateGoogleUser(sameUser, googleUserInfoDto);
-//        }`
+        else {
+           return updateGoogleUser(sameUser, googleUserInfoDto);
+        }
 
-        return sameUser;
     }
 
     private User registerGoogleUserIfNeeded(GoogleUserInfoDto googleUserInfoDto) {
@@ -149,8 +145,6 @@ public class GoogleUserService {
         // DB 에 중복된 google Id 가 있는지 확인
         String googleUserId = googleUserInfoDto.getUsername();
 
-//        User googleUser = userRepository.findUserByUsername(googleUserId).orElseThrow(
-//                () -> new IllegalArgumentException("없는 회원입니다."));;
         User googleUser = userRepository.findUserByUsername(googleUserId);
 
         if (googleUser == null) {
@@ -176,15 +170,14 @@ public class GoogleUserService {
         return googleUser;
     }
 
-//    private User updateGoogleUser(User sameUser, GoogleUserInfoDto googleUserInfoDto) {
-//        if (sameUser.getUsername() == null) {
-//            System.out.println("중복");
-//            sameUser.setUsername(googleUserInfoDto.getUsername());
-//            sameUser.setNickname(googleUserInfoDto.getNickname());
-//            userRepository.save(sameUser);
-//        }
-//        return sameUser;
-//    }
+    private User updateGoogleUser(User sameUser, GoogleUserInfoDto googleUserInfoDto) {
+        if (sameUser.getUsername() == null) {
+            System.out.println("중복");
+            sameUser.setUsername(googleUserInfoDto.getUsername());
+            userRepository.save(sameUser);
+        }
+        return sameUser;
+    }
 
     private String forceLogin(User googleUser) {
         UserDetailsImpl userDetails = new UserDetailsImpl(googleUser);
