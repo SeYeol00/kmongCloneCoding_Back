@@ -25,9 +25,9 @@ public class FormLoginFailureHandler implements AuthenticationFailureHandler {
         String errorMsg = "";
 
         if (exception instanceof UsernameNotFoundException) {
-            errorMsg = "존재하지 않는 아이디입니다.";
+            errorMsg = "존재하지 않는 이메일입니다.";
         } else if (exception instanceof BadCredentialsException) {
-            errorMsg = "아이디 또는 비밀번호가 잘못 입력 되었습니다.";
+            errorMsg = "비밀번호가 잘못 입력 되었습니다.";
         }
 
         if (!StringUtils.isEmpty(errorMsg)) {

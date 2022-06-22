@@ -3,6 +3,7 @@ package com.sparta.kmongclonecoding.security.filter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.kmongclonecoding.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 public class FormLoginFilter extends UsernamePasswordAuthenticationFilter {
     final private ObjectMapper objectMapper;
 
-    public FormLoginFilter(final AuthenticationManager authenticationManager) {
+    final private UserRepository userRepository;
+    public FormLoginFilter(final AuthenticationManager authenticationManager, UserRepository userRepository) {
+        this.userRepository = userRepository;
         super.setAuthenticationManager(authenticationManager);
         objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

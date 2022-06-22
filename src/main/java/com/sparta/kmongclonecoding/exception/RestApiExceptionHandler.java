@@ -2,6 +2,7 @@ package com.sparta.kmongclonecoding.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,5 +31,17 @@ public class RestApiExceptionHandler {
         restApiException.setErrorMessage(e.getMessage());
         return new ResponseEntity<>(restApiException, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value =  IllegalArgumentException.class )
+    public ResponseEntity<RestApiException> handleApiRequestException(IllegalArgumentException ex) {
+        RestApiException restApiException = RestApiException.of(TEMPORARY_SERVER_ERROR);
+        restApiException.setHttpStatus(HttpStatus.BAD_REQUEST);
+        restApiException.setErrorMessage(ex.getMessage());
+        return new ResponseEntity<>(
+                restApiException,
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
 
 }
