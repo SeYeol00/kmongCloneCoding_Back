@@ -21,7 +21,7 @@ public class File {
     @Column(nullable = false)
     private String fileName;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "projectId")
     private Project project;
 
