@@ -46,7 +46,7 @@ public class ProjectService {
         List<HomePageResponseDefaultDto> homePageResponseDefaultDtos = new ArrayList<>();
         List<Project> All_projects = projectRepository.findAll();
         int length = All_projects.size();
-        List<Project> projects = projectRepository.findAllByBigCategory("IT.프로그래밍");
+        List<Project> projects = projectRepository.findAllByBigCategory("IT·프로그래밍");
         int count = 0;
         for (Project project : projects) {
             HomePageResponseDefaultDto homePageResponseDefaultDto = new HomePageResponseDefaultDto(
