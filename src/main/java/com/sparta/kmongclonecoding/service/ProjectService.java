@@ -471,10 +471,6 @@ public List<ProjectListResponseDto> searchProject(String keyword) {
         if (project == null) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
-        List<File> fileList = fileRepository.findAllByProject(project);
-        for (File file : fileList) {
-            awsS3Service.deleteFile(file.getFileName());
-        }
 
         projectRepository.deleteById(projectId);
     }
