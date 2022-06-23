@@ -368,8 +368,8 @@ public List<ProjectListResponseDto> searchProject(String keyword) {
                 () -> new IllegalArgumentException("등록되지 않은 사용자입니다.")
         );
 
-        double randomValue = Math.random();
-        int intValue = (int) (randomValue * 4);
+        Random random = new Random(); // 랜덤 객체 생성
+        int intValue = random.nextInt(4);
         String imageUrl = imageList[intValue];
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd");
