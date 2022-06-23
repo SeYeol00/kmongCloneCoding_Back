@@ -484,6 +484,30 @@ public List<ProjectListResponseDto> searchProject(String keyword) {
         );
         List<File> fileList = fileRepository.findAllByProject(project);
 
+        if(fileList.isEmpty()){
+            return ProjectResponseDto.builder()
+                    .project_Id(project.getId())
+                    .bigCategory(project.getBigCategory())
+                    .smallCategory(project.getSmallCategory())
+                    .progressMethod(project.getProgressMethod())
+                    .projectScope(project.getProjectScope())
+                    .title(project.getTitle())
+                    .currentStatus(project.getCurrentStatus())
+                    .requiredFunction(project.getRequiredFunction())
+                    .userRelatedFunction(project.getUserRelatedFunction())
+                    .commerceRelatedFunction(project.getCommerceRelatedFunction())
+                    .siteEnvironment(project.getSiteEnvironment())
+                    .solutionInUse(project.getSolutionInUse())
+                    .reactable(project.getReactable())
+                    .budget(project.getBudget())
+                    .taxInvoice(project.getTaxInvoice())
+                    .volunteerValidDate(project.getVolunteerValidDate())
+                    .dueDateForApplication(project.getDueDateForApplication())
+                    .workingPeriod(project.getWorkingPeriod())
+                    .description(project.getDescription())
+                    .build();
+        }
+
         return ProjectResponseDto.builder()
                 .project_Id(project.getId())
                 .bigCategory(project.getBigCategory())
