@@ -5,12 +5,12 @@ import com.sparta.kmongclonecoding.dto.SignupRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
-
+@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
-@Builder
+
 @Entity(name="userinfo")
 public class User {
 
